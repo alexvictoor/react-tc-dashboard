@@ -1,5 +1,5 @@
 import { createStore as reduxCreateStore, applyMiddleware, combineReducers, ReducersMapObject, Store } from "redux";
-import { byId, buildsToDisplay, BuildsByIdState, BuildsToDisplayState, BuildId, BuildDetails } from "./build-status-reducers"; 
+import { byId, buildsToDisplay, BuildsByIdState, BuildsToDisplayState, BuildId } from "./build-status-reducers"; 
 import  * as builds from "./build-status-reducers";
 
 
@@ -33,14 +33,28 @@ export const getLastBuildNumber = (id : string, state : AppState) : number => {
 }
 
 
+export interface BuildDetails {
+  name: string,
+  healthy: boolean,
+  brokenTimeInMin?: number,
+  numberOfAttemptsToFix?: number,
+  messageOfFirstBrokenBuild?: string
+}
+
 export const getBuildHighlight= (state: AppState): BuildDetails => {
   const id = state.buildsToDisplay.buildToShowId;
   const build = state.byId[id];
   let result: BuildDetails;
   if (build.lastKnownBuildStatus.success) {
-    
+    result = {
+      name: build.buildName,
+      healthy: true
+    }
   } else {
-    
+    result = {
+      name: build.buildName,
+      healthy: false
+    }
   }
   /*const details: BuildDetails = {
     mess

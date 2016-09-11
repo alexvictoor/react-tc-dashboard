@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import * as reducers from "../src/build-status-reducers"
-import { Action, BuildNotification, types, createClockTick  } from "../src/build-status-actions"
+import { Action, BuildNotification, types, createClockTick  } from "../src/actions"
 
 import "core-js"
 

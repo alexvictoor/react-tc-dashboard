@@ -1,4 +1,4 @@
-import { Action, BuildNotification, types } from "./build-status-actions"
+import { Action, BuildNotification, types } from "./actions"
 
 interface Build {
   buildId: string;
@@ -168,17 +168,6 @@ export interface BuildId {
   name: string;  
 }
 
-export interface BuildDetails {
-  name: string,
-  healthy: boolean,
-  brokenTimeInMin?: number,
-  numberOfAttemptsToFix?: number,
-  messageOfFirstBrokenBuild?: string
-}
-
-const getBuildDetails = (id: string, state: BuildsByIdState): BuildDetails => {
-  return null;
-}
 
 
 const getBuildsByStatus = (state : BuildsByIdState, success : boolean) : BuildId[] => {

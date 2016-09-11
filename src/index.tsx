@@ -6,7 +6,7 @@ import * as $ from 'jquery';
 
 import App from "./containers/App";
 import { createStore, AppState } from "./reducers";
-import { createClockTick, createNotification } from "./build-status-actions";
+import { createClockTick, createNotification } from "./actions";
 import { getLastBuildNumber } from "./build-status-reducers";
 
 interface Configuration {

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Panel, Media } from "react-bootstrap";
-import { BuildDetails } from "../build-status-reducers"
+import { BuildDetails } from "../reducers"
 
 declare const conf : { failurePictures: string[], successPictures: string[] };
 
