@@ -2,9 +2,6 @@ import { expect } from 'chai';
 import * as reducers from "../src/build-status-reducers"
 import { Action, BuildNotification, types, createClockTick  } from "../src/build-status-actions"
 
-//declare function require(name: string) : void;
-
-//require("core-js");
 import "core-js"
 
 let buildNumber = 0;
