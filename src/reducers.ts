@@ -1,7 +1,7 @@
 import { createStore as reduxCreateStore, applyMiddleware, combineReducers, ReducersMapObject, Store } from "redux";
 import { byId, buildsToDisplay, BuildsByIdState, BuildsToDisplayState, BuildId } from "./build-status-reducers"; 
 import  * as builds from "./build-status-reducers";
-
+import * as moment from 'moment';
 
 export interface AppState {
   byId? : BuildsByIdState,
@@ -51,9 +51,18 @@ export const getBuildHighlight= (state: AppState): BuildDetails => {
       healthy: true
     }
   } else {
+    
+    console.log("build.lastKnownFailure.buildDate", moment(build.lastKnownFailure.buildDate).format());
+    console.log("build.lastKnownBuildStatus.buildDate", moment(build.lastKnownBuildStatus.buildDate).format());
+    
+    const brokenTimeInMin
+      = moment(build.lastKnownBuildStatus.buildDate)
+        .diff(moment(build.lastKnownFailure.buildDate), "minute");
+    
     result = {
       name: build.buildName,
-      healthy: false
+      healthy: false,
+      brokenTimeInMin
     }
   }
   /*const details: BuildDetails = {

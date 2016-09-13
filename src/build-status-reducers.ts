@@ -89,7 +89,6 @@ export const buildsToDisplay = (
   action: Action<any>) : BuildsToDisplayState => {
     
   if (action && action.type === types.BUILD_NOTIFICATION) {
-    console.log("ca bouge", action);
     const notification 
       = (action as Action<BuildNotification>).payload;
     const buildId = notification.buildId;
