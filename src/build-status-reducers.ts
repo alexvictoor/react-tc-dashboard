@@ -44,8 +44,12 @@ export const byId = (state: BuildsByIdState = {}, action: Action<BuildNotificati
           buildId : notification.buildId,
           buildName : notification.buildName,  
           lastKnownBuildStatus: null,
-          lastKnownSuccess : null,
-          lastKnownFailure : null
+          lastKnownSuccess: {
+            success: true,
+            buildDate: notification.buildDate,
+            buildNumber: notification.buildNumber - 1
+          },
+          lastKnownFailure: null
       }
     );
 
@@ -55,12 +59,10 @@ export const byId = (state: BuildsByIdState = {}, action: Action<BuildNotificati
       buildNumber: notification.buildNumber
     };
     
-    if (notification.success && !build.lastKnownSuccess) {
+    if (notification.success) {
       build.lastKnownSuccess = build.lastKnownBuildStatus;      
-    }
-    
-    if (!notification.success && !build.lastKnownFailure) {
-      build.lastKnownFailure = build.lastKnownBuildStatus;      
+    } else {
+      build.lastKnownFailure = build.lastKnownBuildStatus;
     }
     
     const newState = copy(state);

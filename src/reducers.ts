@@ -1,18 +1,21 @@
 import { createStore as reduxCreateStore, applyMiddleware, combineReducers, ReducersMapObject, Store } from "redux";
 import { byId, buildsToDisplay, BuildsByIdState, BuildsToDisplayState, BuildId } from "./build-status-reducers"; 
 import  * as builds from "./build-status-reducers";
+import clock from "./clock"
 import * as moment from 'moment';
 
 export interface AppState {
-  byId? : BuildsByIdState,
-  buildsToDisplay? : BuildsToDisplayState
+  byId?: BuildsByIdState,
+  buildsToDisplay?: BuildsToDisplayState,
+  clock?: Date
 }
 
 export const createStore = (initialState : AppState) : Store<AppState> => {
   const reducer = combineReducers(
     { 
       byId, 
-      buildsToDisplay 
+      buildsToDisplay,
+      clock
     }
   );
   const store = reduxCreateStore(reducer, initialState, (window as any).devToolsExtension && (window as any).devToolsExtension())
@@ -41,7 +44,7 @@ export interface BuildDetails {
   messageOfFirstBrokenBuild?: string
 }
 
-export const getBuildHighlight= (state: AppState): BuildDetails => {
+export const getBuildHighlight = (state: AppState): BuildDetails => {
   const id = state.buildsToDisplay.buildToShowId;
   const build = state.byId[id];
   let result: BuildDetails;
@@ -52,23 +55,23 @@ export const getBuildHighlight= (state: AppState): BuildDetails => {
     }
   } else {
     
-    console.log("build.lastKnownFailure.buildDate", moment(build.lastKnownFailure.buildDate).format());
-    console.log("build.lastKnownBuildStatus.buildDate", moment(build.lastKnownBuildStatus.buildDate).format());
-    
     const brokenTimeInMin
-      = moment(build.lastKnownBuildStatus.buildDate)
-        .diff(moment(build.lastKnownFailure.buildDate), "minute");
+      = moment(state.clock)
+        .diff(
+          moment(build.lastKnownFailure.buildDate), 
+          "minute"
+        );
+        
+    const numberOfAttemptsToFix 
+      = build.lastKnownBuildStatus.buildNumber - build.lastKnownSuccess.buildNumber - 1;    
     
     result = {
       name: build.buildName,
       healthy: false,
-      brokenTimeInMin
+      brokenTimeInMin,
+      numberOfAttemptsToFix
     }
   }
-  /*const details: BuildDetails = {
-    mess
-    brokenTimeInMin: 0,
-    
-  }*/
+
   return result;
 }

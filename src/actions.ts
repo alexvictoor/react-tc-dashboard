@@ -25,7 +25,7 @@ export const createNotification = (notification : BuildNotification) : Action<Bu
     }
 ); 
 
-export const createClockTick = (tick : number) : Action<number> => (
+export const createClockTick = (tick : Date) : Action<Date> => (
     { 
         type: types.CLOCK_TICK,
         payload: tick 

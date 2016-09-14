@@ -29,7 +29,7 @@ const isNewBuild = (data: any) : boolean => {
 };
 
 setInterval(() => {
-  store.dispatch(createClockTick(conf.tickInterval));
+  store.dispatch(createClockTick(new Date()));
 }, conf.tickInterval * 1000);
 
 const fetchBuids = () => {

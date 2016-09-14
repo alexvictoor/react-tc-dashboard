@@ -72,7 +72,7 @@ describe('Builds by id reducer', () => {
     const newState = reducers.byId({}, action);
     // then
     expect(newState["dummy"].lastKnownSuccess).to.be.not.null;
-    expect(newState["dummy"].lastKnownSuccess.buildNumber).to.be.equal(action.payload.buildNumber);
+    expect(newState["dummy"].lastKnownSuccess.buildNumber).to.equal(action.payload.buildNumber);
   });
   
   it('should update last known failed build', () => 
@@ -84,7 +84,7 @@ describe('Builds by id reducer', () => {
     const newState = reducers.byId({}, action);
     // then
     expect(newState["dummy"].lastKnownFailure).to.be.not.null;
-    expect(newState["dummy"].lastKnownFailure.buildNumber).to.be.equal(action.payload.buildNumber); 
+    expect(newState["dummy"].lastKnownFailure.buildNumber).to.equal(action.payload.buildNumber); 
   });
   
   it('should not update last known success build on failure notification', () => 
@@ -98,7 +98,7 @@ describe('Builds by id reducer', () => {
     const newState = reducers.byId(previousState, action);
     
     // then
-    expect(newState["dummy"].lastKnownSuccess.buildNumber).to.deep.equal(previousAction.payload.buildNumber);
+    expect(newState["dummy"].lastKnownSuccess.buildNumber).to.equal(previousAction.payload.buildNumber);
   });
   
   it('should not update last known failed build on success notification', () => 
@@ -111,7 +111,22 @@ describe('Builds by id reducer', () => {
     const newState = reducers.byId(previousState, createBuildNotification());
     
     // then
-    expect(newState["dummy"].lastKnownFailure.buildNumber).to.deep.equal(previousAction.payload.buildNumber);
+    expect(newState["dummy"].lastKnownFailure.buildNumber).to.equal(previousAction.payload.buildNumber);
+  });
+  
+  it('should update last known failed build on failure notification followed by a success notification', () => 
+  {
+    // given
+    const firstFailureAction = createBuildNotification(false);
+    const firstState = reducers.byId({}, firstFailureAction);
+    const secondFailureAction = createBuildNotification(false);
+    const secondState = reducers.byId(firstState, secondFailureAction);
+    
+    // when
+    const thirdState = reducers.byId(secondState, createBuildNotification(true));
+    
+    // then
+    expect(thirdState["dummy"].lastKnownFailure.buildNumber).to.equal(secondFailureAction.payload.buildNumber);
   });
   
 });
@@ -268,8 +283,8 @@ describe('Builds to display reducer', () => {
     const state = buildState([
       createFailedBuildNotification("001"),
       createFailedBuildNotification("002"),
-      createClockTick(123),
-      createClockTick(456)
+      createClockTick(new Date()),
+      createClockTick(new Date())
     ]);
     
     // then
@@ -286,8 +301,8 @@ describe('Builds to display reducer', () => {
     ]);
     // when
     const stateAfterTwoTicks = buildState([
-      createClockTick(123),
-      createClockTick(456),
+      createClockTick(new Date()),
+      createClockTick(new Date()),
     ], repairedState);
     // then
     expect(stateAfterTwoTicks.buildToShowId).to.be.equal(repairedState.buildToShowId);

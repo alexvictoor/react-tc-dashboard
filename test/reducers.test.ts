@@ -17,7 +17,7 @@ describe('Selector get build highlight', () => {
     store = reducers.createStore({});
   });
   
-  it('should return failed build', () => {
+  it('should return failed build after one failure notification', () => {
     // given
     store.dispatch(actions.createNotification({
       buildId: "123",
@@ -39,8 +39,34 @@ describe('Selector get build highlight', () => {
        
   });
   
-  it('should return failed build with broken time ', () => {
+  it('should return failed build with broken time after one tick', () => {
     // given
+    store.dispatch(actions.createNotification({
+      buildId: "123",
+      buildDate: new Date(2016, 1, 1, 1, 0),
+      buildName: "dummy",
+      buildNumber: 12,
+      success: false
+    }));
+    store.dispatch(actions.createClockTick(
+      new Date(2016, 1, 1, 1, 23)
+    ));
+    // when
+    const state = store.getState();
+    const highlight = reducers.getBuildHighlight(state);
+    // then
+    expect(highlight.brokenTimeInMin).to.equal(23 - 0);   
+  });
+  
+  it('should return failed build with number of attempt to fix', () => {
+    // given
+    store.dispatch(actions.createNotification({
+      buildId: "123",
+      buildDate: new Date(2016, 1, 1, 0, 0),
+      buildName: "dummy",
+      buildNumber: 11,
+      success: true
+    }));
     store.dispatch(actions.createNotification({
       buildId: "123",
       buildDate: new Date(2016, 1, 1, 1, 0),
@@ -50,16 +76,16 @@ describe('Selector get build highlight', () => {
     }));
     store.dispatch(actions.createNotification({
       buildId: "123",
-      buildDate: new Date(2016, 1, 1, 1, 23),
+      buildDate: new Date(2016, 1, 1, 1, 1),
       buildName: "dummy",
       buildNumber: 13,
       success: false
     }));
-    const initial = store.getState();
     // when
-    const highlight = reducers.getBuildHighlight(initial);
+    const state = store.getState();
+    const highlight = reducers.getBuildHighlight(state);
     // then
-    expect(highlight.brokenTimeInMin).to.deep.equal(23 - 0);   
+    expect(highlight.numberOfAttemptsToFix).to.equal(13 - 11 - 1);   
   });
   
 });
