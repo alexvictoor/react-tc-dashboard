@@ -16,12 +16,17 @@ export interface BuildHightlightContainerProps {
   messageOfFirstBrokenBuild?: string
 }
 
-export const BuildHighlightContainer = ({ 
-  name, 
-  healthy,
-  brokenTimeInMin,
-  numberAttemptsToFix 
-}: BuildHightlightContainerProps) => {
+declare const conf : { failurePictures: string[], successPictures: string[] };
+
+
+export const BuildHighlightContainer = (
+  { 
+    name, 
+    healthy,
+    brokenTimeInMin,
+    numberAttemptsToFix 
+  }
+  : BuildHightlightContainerProps ) => {
  
   let highlight: any;
   if (healthy) {
