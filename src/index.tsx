@@ -48,7 +48,7 @@ const fetchBuids = () => {
           console.log("result", data);
           store.dispatch(
             createNotification({ 
-              buildDate: new Date(),  //TODO use moment.js
+              buildDate: new Date(), 
               buildId: data.buildTypeId,
               buildName: data.buildType.projectName,
               buildNumber,
@@ -68,7 +68,7 @@ fetchBuids();
 
 ReactDOM.render((
      <Provider store={ store }>
-        <App foo="couocu" />
+        <App  />
      </Provider>
      ),
      document.getElementById("main")

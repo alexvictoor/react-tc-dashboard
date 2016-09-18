@@ -13,8 +13,8 @@ module.exports = function (config) {
     basePath: '',
     frameworks: ['mocha', 'chai', 'sinon'],
     files: [
-      'test/*.ts',
-      'test/*.tsx',
+      'test/**/*.ts',
+      'test/**/*.tsx',
     ],
     exclude: [
     ],

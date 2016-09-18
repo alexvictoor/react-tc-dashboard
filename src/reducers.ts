@@ -40,12 +40,14 @@ export interface BuildDetails {
   name: string,
   healthy: boolean,
   brokenTimeInMin?: number,
-  numberOfAttemptsToFix?: number,
+  numberAttemptsToFix?: number,
   messageOfFirstBrokenBuild?: string
 }
 
 export const getBuildHighlight = (state: AppState): BuildDetails => {
+  
   const id = state.buildsToDisplay.buildToShowId;
+
   const build = state.byId[id];
   let result: BuildDetails;
   if (build.lastKnownBuildStatus.success) {
@@ -62,14 +64,14 @@ export const getBuildHighlight = (state: AppState): BuildDetails => {
           "minute"
         );
         
-    const numberOfAttemptsToFix 
+    const numberAttemptsToFix 
       = build.lastKnownBuildStatus.buildNumber - build.lastKnownSuccess.buildNumber - 1;    
     
     result = {
       name: build.buildName,
       healthy: false,
       brokenTimeInMin,
-      numberOfAttemptsToFix
+      numberAttemptsToFix
     }
   }
 

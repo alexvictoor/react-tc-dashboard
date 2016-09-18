@@ -26,9 +26,9 @@ describe('Selector get build highlight', () => {
       buildNumber: 12,
       success: false
     }));
-    const initial = store.getState();
+    const state = store.getState();
     // when
-    const highlight = reducers.getBuildHighlight(initial);
+    const highlight = reducers.getBuildHighlight(state);
     // then
     const expected: reducers.BuildDetails = {
       name: "dummy",
@@ -85,7 +85,7 @@ describe('Selector get build highlight', () => {
     const state = store.getState();
     const highlight = reducers.getBuildHighlight(state);
     // then
-    expect(highlight.numberOfAttemptsToFix).to.equal(13 - 11 - 1);   
+    expect(highlight.numberAttemptsToFix).to.equal(13 - 11 - 1);   
   });
   
 });
