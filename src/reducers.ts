@@ -37,6 +37,7 @@ export const getLastBuildNumber = (id : string, state : AppState) : number => {
 
 
 export interface BuildDetails {
+  id: string,
   name: string,
   healthy: boolean,
   brokenTimeInMin?: number,
@@ -52,6 +53,7 @@ export const getBuildHighlight = (state: AppState): BuildDetails => {
   let result: BuildDetails;
   if (build.lastKnownBuildStatus.success) {
     result = {
+      id: build.buildId,
       name: build.buildName,
       healthy: true
     }
@@ -68,6 +70,7 @@ export const getBuildHighlight = (state: AppState): BuildDetails => {
       = build.lastKnownBuildStatus.buildNumber - build.lastKnownSuccess.buildNumber - 1;    
     
     result = {
+      id: build.buildName,
       name: build.buildName,
       healthy: false,
       brokenTimeInMin,

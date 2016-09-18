@@ -9,6 +9,7 @@ import FailedBuildHighlight from "../components/FailedBuildHighlight"
 
 //type BuildHightlightContainerProps = BuildDetails; 
 export interface BuildHightlightContainerProps {
+  id?: string,
   name?: string,
   healthy?: boolean,
   brokenTimeInMin?: number,
@@ -21,6 +22,7 @@ declare const conf : { failurePictures: string[], successPictures: string[] };
 
 export const BuildHighlightContainer = (
   { 
+    id,
     name, 
     healthy,
     brokenTimeInMin,
@@ -38,6 +40,7 @@ export const BuildHighlightContainer = (
   
   return (
     <FailedBuildHighlight 
+      id={id}
       name={name}
       brokenTimeInMin={brokenTimeInMin}
       numberAttemptsToFix={numberAttemptsToFix}

@@ -31,6 +31,7 @@ describe('Selector get build highlight', () => {
     const highlight = reducers.getBuildHighlight(state);
     // then
     const expected: reducers.BuildDetails = {
+      id: "dummy",
       name: "dummy",
       healthy: false
     }

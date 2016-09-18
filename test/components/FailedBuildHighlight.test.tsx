@@ -8,6 +8,7 @@ describe('FailedBuildHighlight', () => {
     it('should generate a chunk of html with an image', () => {
       const wrapper = mount(
         <FailedBuildHighlight 
+           id="foo"
            name="Some successful build" 
            picture="foo.gif"
            brokenTimeInMin={12}
