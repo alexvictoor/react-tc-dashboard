@@ -18,13 +18,13 @@ export default ({ name, numberAttemptsToFix, brokenTimeInMin, picture }: FailedB
     //const picture =  pictures[Math.floor(Math.random()*pictures.length)];        
     //const message = healthy ? `${name} has succeed!` : `${name} has failed!`;
     const bigMsg = (numberAttemptsToFix > 1) 
-      ? `${name} is still broken (${numberAttemptsToFix} attempts)` 
+      ? `${name} is still broken (${numberAttemptsToFix} uncesseful attempts to repair it)` 
       : name;
     return (
           <Panel header={name} bsStyle="danger" >
             <img src={picture} />
             <h2>{bigMsg}</h2>
-            <p>Broken for {brokenTimeInMin} minutes ({numberAttemptsToFix} uncesseful attempts to repair it)</p>
+            <p>Broken for {brokenTimeInMin} minutes</p>
             <p>Build broken in the first place by: TODO</p>
           </Panel>  
         );

@@ -28,9 +28,12 @@ export const BuildHighlightContainer = (
   }
   : BuildHightlightContainerProps ) => {
  
+  const pictures = healthy ? conf.successPictures : conf.failurePictures;
+  const picture =  pictures[Math.floor(Math.random() * pictures.length)];
+ 
   let highlight: any;
   if (healthy) {
-    return <RepairedBuildHighlight name={name} picture="" />
+    return <RepairedBuildHighlight name={name} picture={picture} />
   }
   
   return (
@@ -38,7 +41,7 @@ export const BuildHighlightContainer = (
       name={name}
       brokenTimeInMin={brokenTimeInMin}
       numberAttemptsToFix={numberAttemptsToFix}
-      picture=""
+      picture={picture}
       messageOfFirstBrokenBuild="TODO"
     />
   );
