@@ -74,7 +74,8 @@ export const getBuildHighlight = (state: AppState): BuildDetails => {
       name: build.buildName,
       healthy: false,
       brokenTimeInMin,
-      numberAttemptsToFix
+      numberAttemptsToFix,
+      messageOfFirstBrokenBuild: build.lastKnownFailure.text
     }
   }
 

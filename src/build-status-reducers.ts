@@ -12,6 +12,7 @@ interface BuildStatus {
   success: boolean;
   buildNumber: number;
   buildDate: Date;  
+  text: string;
 }
 
 export enum BuildEvent {
@@ -47,7 +48,8 @@ export const byId = (state: BuildsByIdState = {}, action: Action<BuildNotificati
           lastKnownSuccess: {
             success: true,
             buildDate: notification.buildDate,
-            buildNumber: notification.buildNumber - 1
+            buildNumber: notification.buildNumber - 1,
+            text: ""
           },
           lastKnownFailure: null
       }
@@ -56,7 +58,8 @@ export const byId = (state: BuildsByIdState = {}, action: Action<BuildNotificati
     build.lastKnownBuildStatus = {
       success: notification.success,
       buildDate: notification.buildDate,
-      buildNumber: notification.buildNumber
+      buildNumber: notification.buildNumber,
+      text: notification.statusText
     };
     
     if (notification.success) {

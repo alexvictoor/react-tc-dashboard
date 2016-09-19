@@ -14,7 +14,8 @@ const createBuildNotification = (success = true) => (
       buildNumber: buildNumber++,
       buildId: "dummy",
       buildName: "dummy",
-      success: success
+      success: success,
+      statusText: "" 
     }
   }
 );
@@ -27,7 +28,8 @@ const createSuccessBuildNotification = (id = "123") => (
       buildNumber: buildNumber++,
       buildId: id,
       buildName: "dummy " + id,
-      success: true
+      success: true,
+      statusText: "It works!"
     }
   }
 );
@@ -40,7 +42,8 @@ const createFailedBuildNotification = (id = "123") => (
       buildNumber: buildNumber++,
       buildId: id,
       buildName: "dummy " + id,
-      success: false
+      success: false,
+      statusText: "KO"
     }
   }
 );
@@ -73,6 +76,8 @@ describe('Builds by id reducer', () => {
     // then
     expect(newState["dummy"].lastKnownSuccess).to.be.not.null;
     expect(newState["dummy"].lastKnownSuccess.buildNumber).to.equal(action.payload.buildNumber);
+    expect(newState["dummy"].lastKnownSuccess.text).to.equal(action.payload.statusText);
+    
   });
   
   it('should update last known failed build', () => 
@@ -114,7 +119,7 @@ describe('Builds by id reducer', () => {
     expect(newState["dummy"].lastKnownFailure.buildNumber).to.equal(previousAction.payload.buildNumber);
   });
   
-  it('should update last known failed build on failure notification followed by a success notification', () => 
+  it('should keep last known failed build when there is a success notification', () => 
   {
     // given
     const firstFailureAction = createBuildNotification(false);
@@ -193,7 +198,6 @@ describe('Build status selectors', () => {
   it('should return build names without duplicates', () => {
     // given
     const firstBuildAction = createBuildNotification(false);
-    console.log("Object.assign", Object.assign);
     const secondBuildAction = createBuildNotification(false);
     secondBuildAction.payload.buildId ="second build";
     const state = reducers.byId({}, firstBuildAction);
@@ -201,7 +205,6 @@ describe('Build status selectors', () => {
     // when
     const builds = reducers.getFailedBuilds(state2)
     // then
-    console.log("state2", state2)
     expect(builds).to.have.length(1);
   });
   

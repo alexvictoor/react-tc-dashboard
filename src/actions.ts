@@ -10,6 +10,7 @@ export interface BuildNotification {
     buildName : string;    
     buildNumber: number;
     buildDate: Date;
+    statusText: string;
 }
 
 export const types = {

@@ -14,7 +14,16 @@ interface FailedBuildHighlightProps {
 }
 
 
-export default ({ id, name, numberAttemptsToFix, brokenTimeInMin, picture }: FailedBuildHighlightProps) => {
+export default (
+  { 
+    id, 
+    name, 
+    numberAttemptsToFix, 
+    brokenTimeInMin, 
+    picture, 
+    messageOfFirstBrokenBuild 
+  }: FailedBuildHighlightProps) => {
+    
     const header = `${name} (${id})`
     const bigMsg = (numberAttemptsToFix > 1) 
       ? `${name} is still broken (${numberAttemptsToFix} uncesseful attempts to repair it)` 
@@ -27,8 +36,8 @@ export default ({ id, name, numberAttemptsToFix, brokenTimeInMin, picture }: Fai
           <Panel header={header} bsStyle="danger" bsSize="large">
             <img src={picture} />
             <h2>{bigMsg}</h2>
-            <p>{durationSection}</p>
-            <p>Build broken in the first place by: TODO</p>
+            {durationSection}
+            <p>Build broken with following message: {messageOfFirstBrokenBuild}</p>
           </Panel>  
         );
 }

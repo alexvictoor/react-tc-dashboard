@@ -24,7 +24,8 @@ describe('Selector get build highlight', () => {
       buildDate: new Date(),
       buildName: "dummy",
       buildNumber: 12,
-      success: false
+      success: false,
+      statusText: "sh$ù*m"
     }));
     const state = store.getState();
     // when
@@ -33,10 +34,12 @@ describe('Selector get build highlight', () => {
     const expected: reducers.BuildDetails = {
       id: "dummy",
       name: "dummy",
-      healthy: false
+      healthy: false,
+      messageOfFirstBrokenBuild: "sh$ù*m"
     }
     expect(highlight.name).to.equal(expected.name);
     expect(highlight.healthy).to.equal(expected.healthy);
+    expect(highlight.messageOfFirstBrokenBuild).to.equal(expected.messageOfFirstBrokenBuild);
        
   });
   
@@ -47,7 +50,8 @@ describe('Selector get build highlight', () => {
       buildDate: new Date(2016, 1, 1, 1, 0),
       buildName: "dummy",
       buildNumber: 12,
-      success: false
+      success: false,
+      statusText: "baad"
     }));
     store.dispatch(actions.createClockTick(
       new Date(2016, 1, 1, 1, 23)
@@ -66,21 +70,24 @@ describe('Selector get build highlight', () => {
       buildDate: new Date(2016, 1, 1, 0, 0),
       buildName: "dummy",
       buildNumber: 11,
-      success: true
+      success: true,
+      statusText: ""
     }));
     store.dispatch(actions.createNotification({
       buildId: "123",
       buildDate: new Date(2016, 1, 1, 1, 0),
       buildName: "dummy",
       buildNumber: 12,
-      success: false
+      success: false,
+      statusText: ""
     }));
     store.dispatch(actions.createNotification({
       buildId: "123",
       buildDate: new Date(2016, 1, 1, 1, 1),
       buildName: "dummy",
       buildNumber: 13,
-      success: false
+      success: false,
+      statusText: ""
     }));
     // when
     const state = store.getState();

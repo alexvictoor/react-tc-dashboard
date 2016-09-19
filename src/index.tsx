@@ -45,14 +45,14 @@ const fetchBuids = () => {
       success: data => { 
         const buildNumber = parseInt(data.number);
         if (isNewBuild(data)) {
-          console.log("result", data);
           store.dispatch(
             createNotification({ 
               buildDate: new Date(), 
               buildId: data.buildTypeId,
               buildName: data.buildType.projectName,
               buildNumber,
-              success: data.status == "SUCCESS"
+              success: data.status == "SUCCESS",
+              statusText: data.statusText
             })
           );
         } 
@@ -60,7 +60,6 @@ const fetchBuids = () => {
       error: (xhr, status, err) => console.error(err.toString())
     });
   });
-  console.log("Application started with redux");
 };
 
 setInterval( fetchBuids, conf.pollingInterval * 1000);

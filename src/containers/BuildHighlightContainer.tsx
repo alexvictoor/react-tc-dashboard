@@ -26,7 +26,8 @@ export const BuildHighlightContainer = (
     name, 
     healthy,
     brokenTimeInMin,
-    numberAttemptsToFix 
+    numberAttemptsToFix,
+    messageOfFirstBrokenBuild 
   }
   : BuildHightlightContainerProps ) => {
  
@@ -45,7 +46,7 @@ export const BuildHighlightContainer = (
       brokenTimeInMin={brokenTimeInMin}
       numberAttemptsToFix={numberAttemptsToFix}
       picture={picture}
-      messageOfFirstBrokenBuild="TODO"
+      messageOfFirstBrokenBuild={messageOfFirstBrokenBuild}
     />
   );
 }  

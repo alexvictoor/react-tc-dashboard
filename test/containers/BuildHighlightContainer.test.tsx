@@ -24,13 +24,16 @@ describe('BuildHighlightContainer', () => {
           name="Some Build"
           brokenTimeInMin={12} 
           numberAttemptsToFix={3}
+          messageOfFirstBrokenBuild="That sucks!"
         />
       );
       const found = wrapper.find(FailedBuildHighlight)
       expect(found).to.have.length(1);
-      expect(found.at(0).prop("name")).to.be.equal("Some Build");
-      expect(found.at(0).prop("brokenTimeInMin")).to.be.equal(12);
-      expect(found.at(0).prop("numberAttemptsToFix")).to.be.equal(3);      
+      const container = found.at(0);
+      expect(container.prop("name")).to.be.equal("Some Build");
+      expect(container.prop("brokenTimeInMin")).to.be.equal(12);
+      expect(container.prop("numberAttemptsToFix")).to.be.equal(3);      
+      expect(container.prop("messageOfFirstBrokenBuild")).to.be.equal("That sucks!");      
     });
  
     global.conf = { successPictures: ["success.png"], failurePictures: ["failure.png"] };
