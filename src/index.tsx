@@ -6,7 +6,7 @@ import * as $ from 'jquery';
 
 import App from "./containers/App";
 import { createStore, AppState } from "./reducers";
-import { createClockTick, createNotification } from "./actions";
+import { createClockTick, createNotification, createNotificationFromRawData } from "./actions";
 import { getLastBuildNumber } from "./build-status-reducers";
 
 interface Configuration {
@@ -43,17 +43,9 @@ const fetchBuids = () => {
       dataType: 'json',
       cache: false,
       success: data => { 
-        const buildNumber = parseInt(data.number);
         if (isNewBuild(data)) {
           store.dispatch(
-            createNotification({ 
-              buildDate: new Date(), 
-              buildId: data.buildTypeId,
-              buildName: data.buildType.projectName,
-              buildNumber,
-              success: data.status == "SUCCESS",
-              statusText: data.statusText
-            })
+            createNotificationFromRawData(data)
           );
         } 
       },

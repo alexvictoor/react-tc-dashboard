@@ -1,3 +1,4 @@
+import * as moment from 'moment';
 
 export interface Action<T> {
     type: string,
@@ -19,16 +20,27 @@ export const types = {
 }
 
 
-export const createNotification = (notification : BuildNotification) : Action<BuildNotification> => (
-    { 
-        type: types.BUILD_NOTIFICATION,
-        payload: notification 
-    }
-); 
+export const createNotification = (notification: BuildNotification): Action<BuildNotification> => (
+  { 
+    type: types.BUILD_NOTIFICATION,
+    payload: notification 
+  }
+);
 
-export const createClockTick = (tick : Date) : Action<Date> => (
-    { 
-        type: types.CLOCK_TICK,
-        payload: tick 
-    }
+export const createNotificationFromRawData = (data: any): Action<BuildNotification> => {
+  return createNotification({ 
+    buildDate: moment(data.finishDate, "YYYYMMDDTHHmmssZ").toDate(), 
+    buildId: data.buildTypeId,
+    buildName: data.buildType.projectName,
+    buildNumber: parseInt(data.number),
+    success: data.status == "SUCCESS",
+    statusText: data.statusText
+  });
+} 
+
+export const createClockTick = (tick: Date): Action<Date> => (
+  { 
+    type: types.CLOCK_TICK,
+    payload: tick 
+  }
 );

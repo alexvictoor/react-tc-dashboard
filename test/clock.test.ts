@@ -4,7 +4,7 @@ import clock from "../src/clock"
 
 describe('Clock reducer', () => {
 
-  it('should update on build notification', () => {
+  it('should not update on build notification', () => {
     // when
     const state = clock(new Date(1970, 1), 
       actions.createNotification({
@@ -17,7 +17,7 @@ describe('Clock reducer', () => {
       })
     );
     // then
-    expect(state).to.deep.equal(new Date(2000, 1));
+    expect(state).to.deep.equal(new Date(1970, 1));
        
   });
   
