@@ -9,7 +9,7 @@ interface BuildListProps {
 
 export default ({ cssClass, builds }: BuildListProps) => {
   const buildItems = builds.map(build => (
-    <ListGroupItem key={build.id} bsStyle={cssClass} >{build.name}</ListGroupItem>
+    <ListGroupItem key={build.id} bsStyle={cssClass} header={build.name}>{build.id}</ListGroupItem>
   ));
   return (
       <ListGroup>
