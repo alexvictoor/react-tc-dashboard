@@ -8,9 +8,19 @@ interface BuildListProps {
 }
 
 export default ({ cssClass, builds }: BuildListProps) => {
-  const buildItems = builds.map(build => (
-    <ListGroupItem key={build.id} bsStyle={cssClass} header={build.name}>{build.id} <Label>{build.minutesSinceBuild}m</Label></ListGroupItem>
-  ));
+  
+  const buildItems = builds.map(build => {
+    const header = <div>{build.name} (<Label>{build.minutesSinceBuild}</Label> minutes ago)</div>
+    return (
+      <ListGroupItem 
+        key={build.id} 
+        bsStyle={cssClass} 
+        header={header}>
+        {build.id}
+      </ListGroupItem>
+    )
+  });
+  
   return (
       <ListGroup>
         {buildItems}

@@ -20,10 +20,10 @@ const App = ({ status }: AppProps) => {
       <Grid>
         <PageHeader cellPadding={10} marginWidth={10} >TeamCity Builds status</PageHeader>
         <Row className="show-grid">
-          <Col xs={12} md={8}>
+          <Col md={60}>
               <BuildHighlightContainer />
           </Col> 
-          <Col xs={6} md={4}>
+          <Col md={60}>
               <BuildListContainer /> 
           </Col>    
         </Row>
