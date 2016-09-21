@@ -190,7 +190,7 @@ const getBuildsByStatus = (state : BuildsByIdState, success : boolean, now = new
       result.push({ id: build.buildId, name: build.buildName, minutesSinceBuild });
     }
   }
-  return result;
+  return result.sort((b1, b2) => b1.minutesSinceBuild  - b2.minutesSinceBuild);
 }
 
 export const getSuccessfulBuilds = (state : BuildsByIdState, now = new Date()) : BuildShortDescription[] => {

@@ -187,6 +187,27 @@ describe('Build status selectors', () => {
     // then
     expect(builds[0].minutesSinceBuild).to.be.equal(42);
   });
+  
+  it('should sort builds from latest to oldest', () => {
+    // given
+    const buildA_notification = createSuccessBuildNotification("A")
+    buildA_notification.payload.buildDate = new Date(2010, 1, 1, 1, 0, 0);
+    const buildB_notification = createSuccessBuildNotification("B")
+    buildB_notification.payload.buildDate = new Date(2010, 1, 42, 1, 0, 0);
+    const buildC_notification = createSuccessBuildNotification("C")
+    buildC_notification.payload.buildDate = new Date(2010, 1, 36, 1, 0, 0);
+    
+    const state = buildState([
+      buildA_notification,
+      buildB_notification,
+      buildC_notification
+    ]);
+    // when
+    const now = new Date();
+    const builds = reducers.getSuccessfulBuilds(state, now);
+    // then
+    expect(builds.map(build => build.id)).to.be.deep.equal(["B", "C", "A"]);
+  });
    
   it('should get last build number', () => {
     // given
@@ -206,7 +227,11 @@ describe('Build status selectors', () => {
     // then
     expect(result).to.be.equal(0);
   });
- 
+
+  const buildState = (actions: Array<Action<any>>, initialState : reducers.BuildsByIdState = undefined) => (
+    actions.reduce((state, action) => reducers.byId(state, action), initialState)    
+  );
+  
 });
 
 describe('Builds to display reducer', () => {
@@ -330,8 +355,5 @@ describe('Builds to display reducer', () => {
   const buildState = (actions: Array<Action<any>>, initialState : reducers.BuildsToDisplayState = undefined) => (
     actions.reduce((state, action) => reducers.buildsToDisplay(state, action), initialState)    
   );
-  
-  
-  
   
 });
