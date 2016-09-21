@@ -1,5 +1,5 @@
 import { createStore as reduxCreateStore, applyMiddleware, combineReducers, ReducersMapObject, Store } from "redux";
-import { byId, buildsToDisplay, BuildsByIdState, BuildsToDisplayState, BuildId } from "./build-status-reducers"; 
+import { byId, buildsToDisplay, BuildsByIdState, BuildsToDisplayState, BuildShortDescription } from "./build-status-reducers"; 
 import  * as builds from "./build-status-reducers";
 import clock from "./clock"
 import * as moment from 'moment';
@@ -23,12 +23,12 @@ export const createStore = (initialState : AppState) : Store<AppState> => {
   return store
 }
 
-export const getSuccessfulBuildNames = (state : AppState) : BuildId[] => {
-  return builds.getSuccessfulBuilds(state.byId);
+export const getSuccessfulBuilds = (state : AppState) : BuildShortDescription[] => {
+  return builds.getSuccessfulBuilds(state.byId, state.clock);
 }
 
-export const getFailedBuildNames = (state : AppState) : BuildId[] => {
-  return builds.getFailedBuilds(state.byId);
+export const getFailedBuilds = (state : AppState) : BuildShortDescription[] => {
+  return builds.getFailedBuilds(state.byId, state.clock);
 }
 
 export const getLastBuildNumber = (id : string, state : AppState) : number => {

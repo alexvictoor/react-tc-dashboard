@@ -2,13 +2,13 @@ import * as React from "react";
 import { Grid, Row, Col, Panel } from "react-bootstrap";
 import { Link } from "react-router";
 import { connect } from "react-redux";
-import { AppState, getSuccessfulBuildNames, getFailedBuildNames } from "../reducers";
+import { AppState, getSuccessfulBuilds, getFailedBuilds } from "../reducers";
 import BuildList from "../components/BuildList"
 
 interface BuildListContainerProps {
     failedBuilds: string[],
     successfulBuilds: string[]
-}
+} 
 
 const BuildListContainer = ({ failedBuilds, successfulBuilds }: any) => {
   return (
@@ -22,8 +22,8 @@ const BuildListContainer = ({ failedBuilds, successfulBuilds }: any) => {
 
 const mapStateToProps = (state : AppState) : any => (
   { 
-    failedBuilds: getFailedBuildNames(state),
-    successfulBuilds: getSuccessfulBuildNames(state),
+    failedBuilds: getFailedBuilds(state),
+    successfulBuilds: getSuccessfulBuilds(state),
     highlightBuild: ""
   }
 );

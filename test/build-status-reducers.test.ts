@@ -143,7 +143,7 @@ describe('Build status selectors', () => {
     // when
     const builds = reducers.getSuccessfulBuilds(state);
     // then
-    expect(builds).to.deep.equal([{ id: "dummy", name: "dummy" }]);
+    expect(builds).to.deep.equal([{ id: "dummy", name: "dummy", minutesSinceBuild: 0 }]);
    
   });
   
@@ -163,7 +163,7 @@ describe('Build status selectors', () => {
     // when
     const builds = reducers.getFailedBuilds(state);
     // then
-    expect(builds).to.deep.equal([{ id: "dummy", name: "dummy" }]);
+    expect(builds).to.deep.equal([{ id: "dummy", name: "dummy", minutesSinceBuild: 0 }]);
   });
   
   it('should remove build from failed builds after a success', () => {
@@ -174,6 +174,18 @@ describe('Build status selectors', () => {
     const builds = reducers.getFailedBuilds(newState);
     // then
     expect(builds).to.deep.equal([]);
+  });
+  
+  it('should get a build with the number of minuted since it was finished', () => {
+    // given
+    const notification = createBuildNotification();
+    notification.payload.buildDate = new Date(2010, 1, 1, 1, 0, 0);
+    const state = reducers.byId({}, notification);
+    // when
+    const now = new Date(2010, 1, 1, 1, 0 + 42, 0);
+    const builds = reducers.getSuccessfulBuilds(state, now);
+    // then
+    expect(builds[0].minutesSinceBuild).to.be.equal(42);
   });
    
   it('should get last build number', () => {
@@ -194,21 +206,7 @@ describe('Build status selectors', () => {
     // then
     expect(result).to.be.equal(0);
   });
-
-  it('should return build names without duplicates', () => {
-    // given
-    const firstBuildAction = createBuildNotification(false);
-    const secondBuildAction = createBuildNotification(false);
-    secondBuildAction.payload.buildId ="second build";
-    const state = reducers.byId({}, firstBuildAction);
-    const state2 = reducers.byId(state, secondBuildAction);
-    // when
-    const builds = reducers.getFailedBuilds(state2)
-    // then
-    expect(builds).to.have.length(1);
-  });
-  
-
+ 
 });
 
 describe('Builds to display reducer', () => {

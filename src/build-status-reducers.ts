@@ -1,4 +1,5 @@
-import { Action, BuildNotification, types } from "./actions"
+import { Action, BuildNotification, types } from "./actions";
+import * as moment from 'moment';
 
 interface Build {
   buildId: string;
@@ -167,31 +168,37 @@ const chooseNewBuild = (state: BuildsToDisplayState) : string => {
 
 // selectors
 
-export interface BuildId {
+export interface BuildShortDescription {
   id: string;
   name: string;  
+  minutesSinceBuild: number;
 }
 
 
 
-const getBuildsByStatus = (state : BuildsByIdState, success : boolean) : BuildId[] => {
-  const result = [];
+const getBuildsByStatus = (state : BuildsByIdState, success : boolean, now = new Date()) : BuildShortDescription[] => {
+  const result: BuildShortDescription[] = [];
   for (var key in state) {
-    if (state[key].lastKnownBuildStatus.success === success) {
-      result.push({ id: state[key].buildId, name: state[key].buildName });
+    const build = state[key];
+    if (build.lastKnownBuildStatus.success === success) {
+      const minutesSinceBuild
+        = moment(now)
+          .diff(
+            moment(build.lastKnownBuildStatus.buildDate), 
+            "minute"
+          );
+      result.push({ id: build.buildId, name: build.buildName, minutesSinceBuild });
     }
   }
-  // remove duplicate
-  const names = result.map(id => id.name);
-  return result.filter((id, index) => names.indexOf(id.name) === index);
+  return result;
 }
 
-export const getSuccessfulBuilds = (state : BuildsByIdState) : BuildId[] => {
-  return getBuildsByStatus(state, true);
+export const getSuccessfulBuilds = (state : BuildsByIdState, now = new Date()) : BuildShortDescription[] => {
+  return getBuildsByStatus(state, true, now);
 }
 
-export const getFailedBuilds = (state : BuildsByIdState) : BuildId[] => {
-  return getBuildsByStatus(state, false);
+export const getFailedBuilds = (state : BuildsByIdState, now = new Date()) : BuildShortDescription[] => {
+  return getBuildsByStatus(state, false, now);
 }
 
 export const getLastBuildNumber = (id : string, state : BuildsByIdState) : number => {

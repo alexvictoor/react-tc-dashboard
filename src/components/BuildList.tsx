@@ -1,9 +1,9 @@
 import * as React from "react";
 import { ListGroup, ListGroupItem  } from "react-bootstrap";
-import { BuildId } from "../build-status-reducers"
+import { BuildShortDescription } from "../build-status-reducers"
 
 interface BuildListProps {
-    builds: BuildId[], 
+    builds: BuildShortDescription[], 
     cssClass: string
 }
 
