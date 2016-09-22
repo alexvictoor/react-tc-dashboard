@@ -34,7 +34,10 @@ export default (
       
     return (
           <Panel header={header} bsStyle="danger" bsSize="large">
-            <img src={picture} />
+            <img 
+              src={picture} 
+              style={{maxHeight: "100%", maxWidth: "100%" }} 
+            />
             <h2>{bigMsg}</h2>
             {durationSection}
             <p>Build broken with following message: {messageOfFirstBrokenBuild}</p>
