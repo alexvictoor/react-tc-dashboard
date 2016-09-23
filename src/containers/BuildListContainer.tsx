@@ -29,4 +29,4 @@ const mapStateToProps = (state : AppState) : any => (
 );
 
 
-export default connect(mapStateToProps)(BuildListContainer)
+export default connect(mapStateToProps)((props: any) => BuildListContainer(props as BuildListContainerProps))

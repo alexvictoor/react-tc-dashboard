@@ -228,7 +228,7 @@ describe('Build status selectors', () => {
     expect(result).to.be.equal(0);
   });
 
-  const buildState = (actions: Array<Action<any>>, initialState : reducers.BuildsByIdState = undefined) => (
+  const buildState = (actions: Array<Action<any>>, initialState: reducers.BuildsByIdState = {}) => (
     actions.reduce((state, action) => reducers.byId(state, action), initialState)    
   );
   
@@ -352,7 +352,7 @@ describe('Builds to display reducer', () => {
     
   });
   
-  const buildState = (actions: Array<Action<any>>, initialState : reducers.BuildsToDisplayState = undefined) => (
+  const buildState = (actions: Array<Action<any>>, initialState : reducers.BuildsToDisplayState =  reducers.buildsToDisplay()) => (
     actions.reduce((state, action) => reducers.buildsToDisplay(state, action), initialState)    
   );
   

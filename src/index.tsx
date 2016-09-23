@@ -62,5 +62,5 @@ ReactDOM.render((
         <App  />
      </Provider>
      ),
-     document.getElementById("main")
+     document.getElementById("main") as HTMLElement
 );

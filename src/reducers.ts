@@ -5,12 +5,12 @@ import clock from "./clock"
 import * as moment from 'moment';
 
 export interface AppState {
-  byId?: BuildsByIdState,
-  buildsToDisplay?: BuildsToDisplayState,
-  clock?: Date
+  byId: BuildsByIdState,
+  buildsToDisplay: BuildsToDisplayState,
+  clock: Date
 }
 
-export const createStore = (initialState : AppState) : Store<AppState> => {
+export const createStore = (initialState : any) : Store<AppState> => {
   const reducer = combineReducers(
     { 
       byId, 
@@ -18,9 +18,14 @@ export const createStore = (initialState : AppState) : Store<AppState> => {
       clock
     }
   );
-  const store = reduxCreateStore(reducer, initialState, (window as any).devToolsExtension && (window as any).devToolsExtension())
+  const store 
+    = reduxCreateStore(
+        reducer, 
+        initialState, 
+        (window as any).devToolsExtension && (window as any).devToolsExtension()
+      );
 
-  return store
+  return store as Store<AppState>
 }
 
 export const getSuccessfulBuilds = (state : AppState) : BuildShortDescription[] => {
@@ -48,6 +53,9 @@ export interface BuildDetails {
 export const getBuildHighlight = (state: AppState): BuildDetails => {
   
   const id = state.buildsToDisplay.buildToShowId;
+  if (!id) {
+    throw "build id is mandatory";
+  }
 
   const build = state.byId[id];
   let result: BuildDetails;

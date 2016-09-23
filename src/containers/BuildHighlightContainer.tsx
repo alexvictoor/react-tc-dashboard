@@ -10,8 +10,8 @@ import FailedBuildHighlight from "../components/FailedBuildHighlight"
 //type BuildHightlightContainerProps = BuildDetails; 
 export interface BuildHightlightContainerProps {
   id?: string,
-  name?: string,
-  healthy?: boolean,
+  name: string,
+  healthy: boolean,
   brokenTimeInMin?: number,
   numberAttemptsToFix?: number,
   messageOfFirstBrokenBuild?: string
@@ -41,12 +41,12 @@ export const BuildHighlightContainer = (
   
   return (
     <FailedBuildHighlight 
-      id={id}
+      id={id as string}
       name={name}
-      brokenTimeInMin={brokenTimeInMin}
-      numberAttemptsToFix={numberAttemptsToFix}
+      brokenTimeInMin={brokenTimeInMin as number}
+      numberAttemptsToFix={numberAttemptsToFix as number}
       picture={picture}
-      messageOfFirstBrokenBuild={messageOfFirstBrokenBuild}
+      messageOfFirstBrokenBuild={messageOfFirstBrokenBuild as string}
     />
   );
 }  
@@ -58,4 +58,4 @@ export const mapStateToProps = (state : AppState) : BuildHightlightContainerProp
 */
 
 
-export default connect(getBuildHighlight)((BuildHighlightContainer))
+export default connect(getBuildHighlight)(((props: any) => BuildHighlightContainer(props as BuildHightlightContainerProps)))

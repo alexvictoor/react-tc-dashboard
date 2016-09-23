@@ -27,15 +27,15 @@ export interface BuildsByIdState {
 
 // TODO include corejs instead to get Object.assign
 const copy = <T>  (src : T) : T => {
-  const result = {}  
-   for (var key in src) {
-     result[key] = src[key];
+  const result: any = {}  
+   for (let key in src) {
+     result[key] = (src as any)[key];
    }
   return result as T;
 }
 
 
-export const byId = (state: BuildsByIdState = {}, action: Action<BuildNotification>) : BuildsByIdState => {
+export const byId = (state: BuildsByIdState = {}, action?: Action<BuildNotification>) : BuildsByIdState => {
   if (action && action.type === types.BUILD_NOTIFICATION) {
 
     const notification = action.payload;
@@ -78,9 +78,9 @@ export const byId = (state: BuildsByIdState = {}, action: Action<BuildNotificati
 
 
 export interface BuildsToDisplayState {
-  buildToShowId: string;
+  buildToShowId: string | null;
   ticksSinceBuildWasChoosen: number;
-  buildToShowStatus: BuildEvent;
+  buildToShowStatus: BuildEvent | null;
   failedBuilds: string[];
 }
 
@@ -92,7 +92,7 @@ export const buildsToDisplay = (
     ticksSinceBuildWasChoosen: 0,
     failedBuilds: [] 
   }, 
-  action: Action<any>) : BuildsToDisplayState => {
+  action?: Action<any>) : BuildsToDisplayState  => {
     
   if (action && action.type === types.BUILD_NOTIFICATION) {
     const notification 
@@ -158,8 +158,8 @@ export const buildsToDisplay = (
   return state;
 }
 
-const chooseNewBuild = (state: BuildsToDisplayState) : string => {
-  const currentId = state.buildToShowId;
+const chooseNewBuild = (state: BuildsToDisplayState): string  => {
+  const currentId = state.buildToShowId || "";
   const nextIdIndex 
     = (state.failedBuilds.indexOf(currentId) + 1) % state.failedBuilds.length;
   return state.failedBuilds[nextIdIndex];
