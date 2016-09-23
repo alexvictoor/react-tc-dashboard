@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import * as React from 'react';
 import { shallow, mount } from 'enzyme';
 import { ListGroupItem } from "react-bootstrap";
-import BuildList from '../src/components/BuildList'
-import { BuildShortDescription } from '../src/build-status-reducers'
+import BuildList from '../../src/components/BuildList'
+import { BuildShortDescription } from '../../src/build-status-reducers'
 
 
 describe('Component', () => {
