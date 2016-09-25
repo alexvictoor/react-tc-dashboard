@@ -95,5 +95,32 @@ describe('Selector get build highlight', () => {
     // then
     expect(highlight.numberAttemptsToFix).to.equal(13 - 11 - 1);   
   });
+
+
+  it('should return an empty detail with name ALL when all builds are green', () => {
+    // given
+    store.dispatch(actions.createNotification({
+      buildId: "123",
+      buildDate: new Date(2016, 1, 1, 0, 0),
+      buildName: "dummy",
+      buildNumber: 11,
+      success: true,
+      statusText: ""
+    }));
+    store.dispatch(actions.createNotification({
+      buildId: "456",
+      buildDate: new Date(2016, 1, 1, 1, 0),
+      buildName: "dummy",
+      buildNumber: 12,
+      success: true,
+      statusText: ""
+    }));
+    // when
+    const state = store.getState();
+    const highlight = reducers.getBuildHighlight(state);
+    // then
+    expect(highlight.name).to.equal("ALL");
+  });
+  
   
 });

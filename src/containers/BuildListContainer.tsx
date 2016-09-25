@@ -20,7 +20,7 @@ const BuildListContainer = ({ failedBuilds, successfulBuilds }: any) => {
 }  
 
 
-const mapStateToProps = (state : AppState) : any => (
+const mapStateToProps = (state: AppState): any => (
   { 
     failedBuilds: getFailedBuilds(state),
     successfulBuilds: getSuccessfulBuilds(state),
@@ -28,5 +28,7 @@ const mapStateToProps = (state : AppState) : any => (
   }
 );
 
-
-export default connect(mapStateToProps)((props: any) => BuildListContainer(props as BuildListContainerProps))
+// hack to avoid putting every props optionnal
+export default connect(mapStateToProps)(
+  (props: any) => BuildListContainer(props as BuildListContainerProps)
+);

@@ -37,11 +37,9 @@ const App = ({ status }: AppProps) => {
 
 
 const mapStateToProps = (state: AppState) : AppProps => { 
-  if (!state.buildsToDisplay.buildToShowId) {
-    console.log("init ok");
+  if (state.byId === {}) {
     return { status: "Init in progress" };
   } 
-  console.log("init done alreaady", state);
   return {};
 }
 

@@ -1,10 +1,8 @@
 import * as React from "react";
 import { Grid, Row, Col, Panel } from "react-bootstrap";
-import { Link } from "react-router";
 import { connect } from "react-redux";
 import { AppState, BuildDetails, getBuildHighlight } from "../reducers";
-import RepairedBuildHighlight from "../components/RepairedBuildHighlight"
-import FailedBuildHighlight from "../components/FailedBuildHighlight"
+import { RepairedBuildHighlight, FailedBuildHighlight, AllBuildsGreenHighlight } from "../components"
 
 
 //type BuildHightlightContainerProps = BuildDetails; 
@@ -36,6 +34,9 @@ export const BuildHighlightContainer = (
  
   let highlight: any;
   if (healthy) {
+    if (name === "ALL") {
+      return <AllBuildsGreenHighlight picture={picture} />
+    }
     return <RepairedBuildHighlight name={name} picture={picture} />
   }
   
@@ -51,11 +52,7 @@ export const BuildHighlightContainer = (
   );
 }  
 
-/*
-export const mapStateToProps = (state : AppState) : BuildHightlightContainerProps => (
-  getBuildHighlight(state)
+// hack to avoid putting every props optionnal
+export default connect(getBuildHighlight)(
+  ((props: any) => BuildHighlightContainer(props as BuildHightlightContainerProps))
 );
-*/
-
-
-export default connect(getBuildHighlight)(((props: any) => BuildHighlightContainer(props as BuildHightlightContainerProps)))

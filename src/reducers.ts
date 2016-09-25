@@ -54,7 +54,11 @@ export const getBuildHighlight = (state: AppState): BuildDetails => {
   
   const id = state.buildsToDisplay.buildToShowId;
   if (!id) {
-    throw "build id is mandatory";
+    return {
+      id: "ALL",
+      name: "ALL",
+      healthy: true
+    }
   }
 
   const build = state.byId[id];

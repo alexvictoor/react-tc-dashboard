@@ -2,8 +2,7 @@ import { expect } from 'chai';
 import * as React from 'react';
 import { shallow } from 'enzyme';
 import { BuildHighlightContainer } from '../../src/containers/BuildHighlightContainer'
-import RepairedBuildHighlight from '../../src/components/RepairedBuildHighlight'
-import FailedBuildHighlight from '../../src/components/FailedBuildHighlight'
+import  { RepairedBuildHighlight, FailedBuildHighlight, AllBuildsGreenHighlight } from "../../src/components"
 
 
 
@@ -55,6 +54,13 @@ describe('BuildHighlightContainer', () => {
       );
       const found = wrapper.find(FailedBuildHighlight).at(0);
       expect(found.prop("picture")).to.be.equal("failure.png");
+    });
+
+    it('should generate an all green highlight when all builds green', () => {
+      const wrapper = shallow(<BuildHighlightContainer healthy={true} name="ALL" />);
+      const found = wrapper.find(AllBuildsGreenHighlight)
+      expect(found).to.have.length(1);
+      expect(found.prop("picture")).to.be.equal("success.png");
     });
     
 });
