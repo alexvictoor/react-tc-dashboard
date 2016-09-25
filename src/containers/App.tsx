@@ -29,7 +29,7 @@ const App = ({ status }: AppProps) => {
         </Row>
       </Grid>
       <p>
-          TODO footer
+          <a href="https://github.com/alexvictoor/react-tc-dashboard">Fork me!</a>
       </p>
     </div>
   )
