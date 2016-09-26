@@ -1,8 +1,7 @@
 import * as React from "react";
 import { Panel, Label } from "react-bootstrap";
-import { BuildDetails } from "../reducers"
-
-declare const conf : { failurePictures: string[], successPictures: string[] };
+import { BuildDetails } from "../reducers";
+import Duration from "./Duration";
 
 interface FailedBuildHighlightProps {
   id: string;
@@ -29,7 +28,7 @@ export default (
       ? `${name} is still broken (${numberAttemptsToFix} uncesseful attempts to repair it)` 
       : name;
     const durationSection = (brokenTimeInMin > 1) 
-      ? <h3>Broken for <Label bsStyle="danger">{brokenTimeInMin}</Label> minutes</h3>
+      ? <h3>Broken <Duration minutes={brokenTimeInMin} bsStyle="danger" /></h3>
       : <h3>Build has just been broken</h3>
       
     return (

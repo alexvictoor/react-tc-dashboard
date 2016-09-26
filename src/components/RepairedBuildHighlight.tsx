@@ -1,8 +1,6 @@
 import * as React from "react";
 import { Panel } from "react-bootstrap";
 
-declare const conf : { successPictures: string[] };
-
 interface RepairedBuildHighlightProps {
   name: string;
   picture: string;
