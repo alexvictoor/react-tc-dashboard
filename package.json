@@ -4,7 +4,7 @@
   "description": "",
   "main": "./dist/bundle.js",
   "scripts": {
-    "postinstall": "typings install --overwrite --save",
+    "postinstall": "npm install -g typescript typings && typings install --overwrite --save",
     "test": "karma start"
   },
   "author": "",
