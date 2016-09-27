@@ -11927,10 +11927,10 @@
 	        React.createElement(react_bootstrap_1.Grid, null, 
 	            React.createElement(react_bootstrap_1.PageHeader, {cellPadding: 10, marginWidth: 10}, "TeamCity Builds status"), 
 	            React.createElement(react_bootstrap_1.Row, {className: "show-grid"}, 
-	                React.createElement(react_bootstrap_1.Col, {md: 6}, 
+	                React.createElement(react_bootstrap_1.Col, {md: conf.highlightSize}, 
 	                    React.createElement(BuildHighlightContainer_1.default, null)
 	                ), 
-	                React.createElement(react_bootstrap_1.Col, {md: 6}, 
+	                React.createElement(react_bootstrap_1.Col, {md: conf.buildListSize}, 
 	                    React.createElement(BuildListContainer_1.default, null)
 	                ))), 
 	        React.createElement("p", null, 
