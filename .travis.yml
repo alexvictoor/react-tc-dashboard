@@ -1,4 +1,7 @@
 language: node_js
 
+before_script:
+  - npm install -g typescript typings
 script:
   - node_modules/karma/bin/karma start karma.conf.js --single-run
+
