@@ -6,6 +6,9 @@ import { AppState } from "../reducers";
 import BuildListContainer from "./BuildListContainer";
 import BuildHighlightContainer from "./BuildHighlightContainer"
 
+
+declare const conf: {highlightSize: number, buildListSize: number};
+
 interface AppProps {
   status?: string;
 }
@@ -20,10 +23,10 @@ const App = ({ status }: AppProps) => {
       <Grid>
         <PageHeader cellPadding={10} marginWidth={10} >TeamCity Builds status</PageHeader>
         <Row className="show-grid">
-          <Col md={6}>
+          <Col md={conf.highlightSize}>
               <BuildHighlightContainer />
           </Col> 
-          <Col md={6}>
+          <Col md={conf.buildListSize}>
               <BuildListContainer /> 
           </Col>    
         </Row>

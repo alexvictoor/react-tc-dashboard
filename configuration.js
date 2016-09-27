@@ -4,6 +4,8 @@ var conf =  {
     teamcityUrl: "http://127.0.0.1:9444",
     pollingInterval: 10,
     tickInterval: 20,
+    highlightSize: 6,
+    buildListSize: 6,
     builds: [ 
         "Dummy_DuDu",
         "Level1_Level2",
