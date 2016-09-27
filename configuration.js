@@ -1,13 +1,14 @@
 
 
+
 var conf =  {
-    teamcityUrl: "https://teamcity.jetbrains.com",
+    teamcityUrl: "http://127.0.0.1:9444",
     pollingInterval: 10,
     tickInterval: 20,
     builds: [ 
-        "Kotlin_AndroidIntegrationTests",
-        "Kotlin_GradleIncrementalCompilationTests",
-        "KotlinTools_Exposed_Build"
+        "Dummy_DuDu",
+        "Level1_Level2",
+        "Dummy_Bibi"
     ],
     
     successPictures: [

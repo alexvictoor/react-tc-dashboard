@@ -71,22 +71,13 @@
 	            dataType: 'json',
 	            cache: false,
 	            success: function (data) {
-	                var buildNumber = parseInt(data.number);
 	                if (isNewBuild(data)) {
-	                    console.log("result", data);
-	                    store.dispatch(actions_1.createNotification({
-	                        buildDate: new Date(),
-	                        buildId: data.buildTypeId,
-	                        buildName: data.buildType.projectName,
-	                        buildNumber: buildNumber,
-	                        success: data.status == "SUCCESS"
-	                    }));
+	                    store.dispatch(actions_1.createNotificationFromRawData(data));
 	                }
 	            },
 	            error: function (xhr, status, err) { return console.error(err.toString()); }
 	        });
 	    });
-	    console.log("Application started with redux");
 	};
 	setInterval(fetchBuids, conf.pollingInterval * 1000);
 	fetchBuids();
@@ -11926,7 +11917,7 @@
 	var react_bootstrap_1 = __webpack_require__(29);
 	var react_redux_1 = __webpack_require__(3);
 	var BuildListContainer_1 = __webpack_require__(281);
-	var BuildHighlightContainer_1 = __webpack_require__(289);
+	var BuildHighlightContainer_1 = __webpack_require__(290);
 	var App = function (_a) {
 	    var status = _a.status;
 	    if (status) {
@@ -11936,20 +11927,20 @@
 	        React.createElement(react_bootstrap_1.Grid, null, 
 	            React.createElement(react_bootstrap_1.PageHeader, {cellPadding: 10, marginWidth: 10}, "TeamCity Builds status"), 
 	            React.createElement(react_bootstrap_1.Row, {className: "show-grid"}, 
-	                React.createElement(react_bootstrap_1.Col, {xs: 6, md: 4}, 
-	                    React.createElement(BuildListContainer_1.default, null)
-	                ), 
-	                React.createElement(react_bootstrap_1.Col, {xs: 12, md: 8}, 
+	                React.createElement(react_bootstrap_1.Col, {md: 6}, 
 	                    React.createElement(BuildHighlightContainer_1.default, null)
+	                ), 
+	                React.createElement(react_bootstrap_1.Col, {md: 6}, 
+	                    React.createElement(BuildListContainer_1.default, null)
 	                ))), 
-	        React.createElement("p", null, "TODO footer")));
+	        React.createElement("p", null, 
+	            React.createElement("a", {href: "https://github.com/alexvictoor/react-tc-dashboard"}, "Fork me!")
+	        )));
 	};
 	var mapStateToProps = function (state) {
-	    if (!state.buildsToDisplay.buildToShowId) {
-	        console.log("init ok");
+	    if (state.byId === {}) {
 	        return { status: "Init in progress" };
 	    }
-	    console.log("init done alreaady", state);
 	    return {};
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -30716,12 +30707,12 @@
 	        React.createElement(BuildList_1.default, {builds: successfulBuilds, cssClass: "success"})));
 	};
 	var mapStateToProps = function (state) { return ({
-	    failedBuilds: reducers_1.getFailedBuildNames(state),
-	    successfulBuilds: reducers_1.getSuccessfulBuildNames(state),
+	    failedBuilds: reducers_1.getFailedBuilds(state),
+	    successfulBuilds: reducers_1.getSuccessfulBuilds(state),
 	    highlightBuild: ""
 	}); };
 	Object.defineProperty(exports, "__esModule", { value: true });
-	exports.default = react_redux_1.connect(mapStateToProps)(BuildListContainer);
+	exports.default = react_redux_1.connect(mapStateToProps)(function (props) { return BuildListContainer(props); });
 
 
 /***/ },
@@ -30732,8 +30723,8 @@
 	var redux_1 = __webpack_require__(11);
 	var build_status_reducers_1 = __webpack_require__(283);
 	var builds = __webpack_require__(283);
-	var clock_1 = __webpack_require__(285);
-	var moment = __webpack_require__(286);
+	var clock_1 = __webpack_require__(287);
+	var moment = __webpack_require__(285);
 	exports.createStore = function (initialState) {
 	    var reducer = redux_1.combineReducers({
 	        byId: build_status_reducers_1.byId,
@@ -30743,21 +30734,29 @@
 	    var store = redux_1.createStore(reducer, initialState, window.devToolsExtension && window.devToolsExtension());
 	    return store;
 	};
-	exports.getSuccessfulBuildNames = function (state) {
-	    return builds.getSuccessfulBuilds(state.byId);
+	exports.getSuccessfulBuilds = function (state) {
+	    return builds.getSuccessfulBuilds(state.byId, state.clock);
 	};
-	exports.getFailedBuildNames = function (state) {
-	    return builds.getFailedBuilds(state.byId);
+	exports.getFailedBuilds = function (state) {
+	    return builds.getFailedBuilds(state.byId, state.clock);
 	};
 	exports.getLastBuildNumber = function (id, state) {
 	    return builds.getLastBuildNumber(id, state.byId);
 	};
 	exports.getBuildHighlight = function (state) {
 	    var id = state.buildsToDisplay.buildToShowId;
+	    if (!id) {
+	        return {
+	            id: "ALL",
+	            name: "ALL",
+	            healthy: true
+	        };
+	    }
 	    var build = state.byId[id];
 	    var result;
 	    if (build.lastKnownBuildStatus.success) {
 	        result = {
+	            id: build.buildId,
 	            name: build.buildName,
 	            healthy: true
 	        };
@@ -30767,10 +30766,12 @@
 	            .diff(moment(build.lastKnownFailure.buildDate), "minute");
 	        var numberAttemptsToFix = build.lastKnownBuildStatus.buildNumber - build.lastKnownSuccess.buildNumber - 1;
 	        result = {
+	            id: build.buildName,
 	            name: build.buildName,
 	            healthy: false,
 	            brokenTimeInMin: brokenTimeInMin,
-	            numberAttemptsToFix: numberAttemptsToFix
+	            numberAttemptsToFix: numberAttemptsToFix,
+	            messageOfFirstBrokenBuild: build.lastKnownFailure.text
 	        };
 	    }
 	    return result;
@@ -30783,6 +30784,7 @@
 
 	"use strict";
 	var actions_1 = __webpack_require__(284);
+	var moment = __webpack_require__(285);
 	(function (BuildEvent) {
 	    BuildEvent[BuildEvent["Failed"] = 0] = "Failed";
 	    BuildEvent[BuildEvent["Repaired"] = 1] = "Repaired";
@@ -30808,14 +30810,16 @@
 	                lastKnownSuccess: {
 	                    success: true,
 	                    buildDate: notification.buildDate,
-	                    buildNumber: notification.buildNumber - 1
+	                    buildNumber: notification.buildNumber - 1,
+	                    text: ""
 	                },
 	                lastKnownFailure: null
 	            });
 	        build.lastKnownBuildStatus = {
 	            success: notification.success,
 	            buildDate: notification.buildDate,
-	            buildNumber: notification.buildNumber
+	            buildNumber: notification.buildNumber,
+	            text: notification.statusText
 	        };
 	        if (notification.success) {
 	            build.lastKnownSuccess = build.lastKnownBuildStatus;
@@ -30894,26 +30898,30 @@
 	    return state;
 	};
 	var chooseNewBuild = function (state) {
-	    var currentId = state.buildToShowId;
+	    var currentId = state.buildToShowId || "";
 	    var nextIdIndex = (state.failedBuilds.indexOf(currentId) + 1) % state.failedBuilds.length;
 	    return state.failedBuilds[nextIdIndex];
 	};
-	var getBuildsByStatus = function (state, success) {
+	var getBuildsByStatus = function (state, success, now) {
+	    if (now === void 0) { now = new Date(); }
 	    var result = [];
 	    for (var key in state) {
-	        if (state[key].lastKnownBuildStatus.success === success) {
-	            result.push({ id: state[key].buildId, name: state[key].buildName });
+	        var build = state[key];
+	        if (build.lastKnownBuildStatus.success === success) {
+	            var minutesSinceBuild = moment(now)
+	                .diff(moment(build.lastKnownBuildStatus.buildDate), "minute");
+	            result.push({ id: build.buildId, name: build.buildName, minutesSinceBuild: minutesSinceBuild });
 	        }
 	    }
-	    // remove duplicate
-	    var names = result.map(function (id) { return id.name; });
-	    return result.filter(function (id, index) { return names.indexOf(id.name) === index; });
+	    return result.sort(function (b1, b2) { return b1.minutesSinceBuild - b2.minutesSinceBuild; });
 	};
-	exports.getSuccessfulBuilds = function (state) {
-	    return getBuildsByStatus(state, true);
+	exports.getSuccessfulBuilds = function (state, now) {
+	    if (now === void 0) { now = new Date(); }
+	    return getBuildsByStatus(state, true, now);
 	};
-	exports.getFailedBuilds = function (state) {
-	    return getBuildsByStatus(state, false);
+	exports.getFailedBuilds = function (state, now) {
+	    if (now === void 0) { now = new Date(); }
+	    return getBuildsByStatus(state, false, now);
 	};
 	exports.getLastBuildNumber = function (id, state) {
 	    if (state[id]) {
@@ -30925,9 +30933,10 @@
 
 /***/ },
 /* 284 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	var moment = __webpack_require__(285);
 	exports.types = {
 	    BUILD_NOTIFICATION: "BUILD_NOTIFICATION",
 	    CLOCK_TICK: "CLOCK_TICK"
@@ -30936,6 +30945,16 @@
 	    type: exports.types.BUILD_NOTIFICATION,
 	    payload: notification
 	}); };
+	exports.createNotificationFromRawData = function (data) {
+	    return exports.createNotification({
+	        buildDate: moment(data.finishDate, "YYYYMMDDTHHmmssZ").toDate(),
+	        buildId: data.buildTypeId,
+	        buildName: data.buildType.projectName,
+	        buildNumber: parseInt(data.number),
+	        success: data.status == "SUCCESS",
+	        statusText: data.statusText
+	    });
+	};
 	exports.createClockTick = function (tick) { return ({
 	    type: exports.types.CLOCK_TICK,
 	    payload: tick
@@ -30944,25 +30963,6 @@
 
 /***/ },
 /* 285 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var actions_1 = __webpack_require__(284);
-	Object.defineProperty(exports, "__esModule", { value: true });
-	exports.default = function (state, action) {
-	    if (state === void 0) { state = new Date(); }
-	    if (action && action.type === actions_1.types.BUILD_NOTIFICATION) {
-	        return action.payload.buildDate;
-	    }
-	    else if (action && action.type === actions_1.types.CLOCK_TICK) {
-	        return action.payload;
-	    }
-	    return state;
-	};
-
-
-/***/ },
-/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {//! moment.js
@@ -35199,10 +35199,10 @@
 	    return _moment;
 	
 	}));
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(287)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(286)(module)))
 
 /***/ },
-/* 287 */
+/* 286 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -35218,16 +35218,40 @@
 
 
 /***/ },
+/* 287 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var actions_1 = __webpack_require__(284);
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.default = function (state, action) {
+	    if (state === void 0) { state = new Date(); }
+	    if (action && action.type === actions_1.types.CLOCK_TICK) {
+	        return action.payload;
+	    }
+	    return state;
+	};
+
+
+/***/ },
 /* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var React = __webpack_require__(1);
 	var react_bootstrap_1 = __webpack_require__(29);
+	var Duration_1 = __webpack_require__(289);
 	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = function (_a) {
 	    var cssClass = _a.cssClass, builds = _a.builds;
-	    var buildItems = builds.map(function (build) { return (React.createElement(react_bootstrap_1.ListGroupItem, {key: build.id, bsStyle: cssClass}, build.name)); });
+	    var buildItems = builds.map(function (build) {
+	        var header = React.createElement("div", null, 
+	            build.name, 
+	            " (", 
+	            React.createElement(Duration_1.default, {minutes: build.minutesSinceBuild}), 
+	            ")");
+	        return (React.createElement(react_bootstrap_1.ListGroupItem, {key: build.id, bsStyle: cssClass, header: header}, build.id));
+	    });
 	    return (React.createElement(react_bootstrap_1.ListGroup, null, buildItems));
 	};
 
@@ -35238,26 +35262,80 @@
 
 	"use strict";
 	var React = __webpack_require__(1);
-	var react_redux_1 = __webpack_require__(3);
-	var reducers_1 = __webpack_require__(282);
-	var RepairedBuildHighlight_1 = __webpack_require__(290);
-	var FailedBuildHighlight_1 = __webpack_require__(291);
-	exports.BuildHighlightContainer = function (_a) {
-	    var name = _a.name, healthy = _a.healthy, brokenTimeInMin = _a.brokenTimeInMin, numberAttemptsToFix = _a.numberAttemptsToFix;
-	    var pictures = healthy ? conf.successPictures : conf.failurePictures;
-	    var picture = pictures[Math.floor(Math.random() * pictures.length)];
-	    var highlight;
-	    if (healthy) {
-	        return React.createElement(RepairedBuildHighlight_1.default, {name: name, picture: picture});
-	    }
-	    return (React.createElement(FailedBuildHighlight_1.default, {name: name, brokenTimeInMin: brokenTimeInMin, numberAttemptsToFix: numberAttemptsToFix, picture: picture, messageOfFirstBrokenBuild: "TODO"}));
-	};
+	var react_bootstrap_1 = __webpack_require__(29);
 	Object.defineProperty(exports, "__esModule", { value: true });
-	exports.default = react_redux_1.connect(reducers_1.getBuildHighlight)((exports.BuildHighlightContainer));
+	exports.default = function (_a) {
+	    var minutes = _a.minutes, _b = _a.threshold, threshold = _b === void 0 ? 10 : _b, bsStyle = _a.bsStyle;
+	    var lessThanTWo = (minutes < 2);
+	    var lessThanOneHour = (minutes < 60);
+	    var lessThanTwoHours = (minutes < 120);
+	    var PassThrough = function (props) { return React.createElement("span", null, props.children); };
+	    var BsLabel = function (props) { return React.createElement(react_bootstrap_1.Label, {bsStyle: bsStyle}, props.children); };
+	    var Container = (minutes < threshold) ? PassThrough : BsLabel;
+	    var result = lessThanTWo ?
+	        (React.createElement("span", null, "just now"))
+	        : lessThanOneHour ?
+	            (React.createElement("span", null, 
+	                React.createElement(Container, null, 
+	                    minutes, 
+	                    " minutes"), 
+	                " ago"))
+	            : lessThanTwoHours ?
+	                (React.createElement("span", null, 
+	                    React.createElement(Container, null, "1 hour"), 
+	                    " ago"))
+	                : (React.createElement("span", null, 
+	                    React.createElement(Container, null, 
+	                        Math.floor(minutes / 60), 
+	                        " hours"), 
+	                    " ago"));
+	    return result;
+	};
 
 
 /***/ },
 /* 290 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var React = __webpack_require__(1);
+	var react_redux_1 = __webpack_require__(3);
+	var reducers_1 = __webpack_require__(282);
+	var components_1 = __webpack_require__(291);
+	exports.BuildHighlightContainer = function (_a) {
+	    var id = _a.id, name = _a.name, healthy = _a.healthy, brokenTimeInMin = _a.brokenTimeInMin, numberAttemptsToFix = _a.numberAttemptsToFix, messageOfFirstBrokenBuild = _a.messageOfFirstBrokenBuild;
+	    var pictures = healthy ? conf.successPictures : conf.failurePictures;
+	    var picture = pictures[Math.floor(Math.random() * pictures.length)];
+	    var highlight;
+	    if (healthy) {
+	        if (name === "ALL") {
+	            return React.createElement(components_1.AllBuildsGreenHighlight, {picture: picture});
+	        }
+	        return React.createElement(components_1.RepairedBuildHighlight, {name: name, picture: picture});
+	    }
+	    return (React.createElement(components_1.FailedBuildHighlight, {id: id, name: name, brokenTimeInMin: brokenTimeInMin, numberAttemptsToFix: numberAttemptsToFix, picture: picture, messageOfFirstBrokenBuild: messageOfFirstBrokenBuild}));
+	};
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.default = react_redux_1.connect(reducers_1.getBuildHighlight)((function (props) { return exports.BuildHighlightContainer(props); }));
+
+
+/***/ },
+/* 291 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var RepairedBuildHighlight_1 = __webpack_require__(292);
+	exports.RepairedBuildHighlight = RepairedBuildHighlight_1.default;
+	var FailedBuildHighlight_1 = __webpack_require__(293);
+	exports.FailedBuildHighlight = FailedBuildHighlight_1.default;
+	var AllBuildsGreenHighlight_1 = __webpack_require__(294);
+	exports.AllBuildsGreenHighlight = AllBuildsGreenHighlight_1.default;
+	var BuildList_1 = __webpack_require__(288);
+	exports.BuildList = BuildList_1.default;
+
+
+/***/ },
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -35275,7 +35353,37 @@
 
 
 /***/ },
-/* 291 */
+/* 293 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var React = __webpack_require__(1);
+	var react_bootstrap_1 = __webpack_require__(29);
+	var Duration_1 = __webpack_require__(289);
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.default = function (_a) {
+	    var id = _a.id, name = _a.name, numberAttemptsToFix = _a.numberAttemptsToFix, brokenTimeInMin = _a.brokenTimeInMin, picture = _a.picture, messageOfFirstBrokenBuild = _a.messageOfFirstBrokenBuild;
+	    var header = name + " (" + id + ")";
+	    var bigMsg = (numberAttemptsToFix > 1)
+	        ? name + " is still broken (" + numberAttemptsToFix + " uncesseful attempts to repair it)"
+	        : name;
+	    var durationSection = (brokenTimeInMin > 1)
+	        ? React.createElement("h3", null, 
+	            "Broken ", 
+	            React.createElement(Duration_1.default, {minutes: brokenTimeInMin, bsStyle: "danger"}))
+	        : React.createElement("h3", null, "Build has just been broken");
+	    return (React.createElement(react_bootstrap_1.Panel, {header: header, bsStyle: "danger", bsSize: "large"}, 
+	        React.createElement("img", {src: picture, style: { maxHeight: "100%", maxWidth: "100%" }}), 
+	        React.createElement("h2", null, bigMsg), 
+	        durationSection, 
+	        React.createElement("p", null, 
+	            "Build broken with following message: ", 
+	            messageOfFirstBrokenBuild)));
+	};
+
+
+/***/ },
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -35283,21 +35391,10 @@
 	var react_bootstrap_1 = __webpack_require__(29);
 	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = function (_a) {
-	    var name = _a.name, numberAttemptsToFix = _a.numberAttemptsToFix, brokenTimeInMin = _a.brokenTimeInMin, picture = _a.picture;
-	    //const pictures = healthy ? conf.successPictures : conf.failurePictures;
-	    //const picture =  pictures[Math.floor(Math.random()*pictures.length)];        
-	    //const message = healthy ? `${name} has succeed!` : `${name} has failed!`;
-	    var bigMsg = (numberAttemptsToFix > 1)
-	        ? name + " is still broken (" + numberAttemptsToFix + " uncesseful attempts to repair it)"
-	        : name;
-	    return (React.createElement(react_bootstrap_1.Panel, {header: name, bsStyle: "danger"}, 
+	    var picture = _a.picture;
+	    return (React.createElement(react_bootstrap_1.Panel, {header: name, bsStyle: "success"}, 
 	        React.createElement("img", {src: picture}), 
-	        React.createElement("h2", null, bigMsg), 
-	        React.createElement("p", null, 
-	            "Broken for ", 
-	            brokenTimeInMin, 
-	            " minutes"), 
-	        React.createElement("p", null, "Build broken in the first place by: TODO")));
+	        React.createElement("h2", null, "All builds are green \\o/")));
 	};
 
 
