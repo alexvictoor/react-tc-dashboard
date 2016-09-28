@@ -1,4 +1,5 @@
 import * as moment from 'moment';
+import { AppState } from './reducers';
 
 export interface Action<T> {
     type: string,
@@ -27,16 +28,24 @@ export const createNotification = (notification: BuildNotification): Action<Buil
   }
 );
 
-export const createNotificationFromRawData = (data: any): Action<BuildNotification> => {
-  return createNotification({ 
+export const parseBuildNotification = (data: any): BuildNotification => {
+  return { 
     buildDate: moment(data.finishDate, "YYYYMMDDTHHmmssZ").toDate(), 
     buildId: data.buildTypeId,
     buildName: data.buildType.projectName,
     buildNumber: parseInt(data.number),
     success: data.status == "SUCCESS",
     statusText: data.statusText
-  });
-} 
+  };
+}
+
+export const isNewBuild = (notification: BuildNotification, state: AppState): boolean => {
+  const buildState = state.byId[notification.buildId];  
+  if (!buildState) {
+    return true;
+  }
+  return !moment(notification.buildDate).isSame(buildState.lastKnownBuildStatus.buildDate);
+}
 
 export const createClockTick = (tick: Date): Action<Date> => (
   { 
