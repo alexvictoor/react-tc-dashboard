@@ -52,12 +52,7 @@
 	var App_1 = __webpack_require__(28);
 	var reducers_1 = __webpack_require__(282);
 	var actions_1 = __webpack_require__(284);
-	var build_status_reducers_1 = __webpack_require__(283);
 	var store = reducers_1.createStore({});
-	var isNewBuild = function (data) {
-	    var buildNumber = parseInt(data.number);
-	    return (build_status_reducers_1.getLastBuildNumber(data.buildTypeId, store.getState().byId) < buildNumber);
-	};
 	setInterval(function () {
 	    store.dispatch(actions_1.createClockTick(new Date()));
 	}, conf.tickInterval * 1000);
@@ -71,8 +66,9 @@
 	            dataType: 'json',
 	            cache: false,
 	            success: function (data) {
-	                if (isNewBuild(data)) {
-	                    store.dispatch(actions_1.createNotificationFromRawData(data));
+	                var buildNotification = actions_1.parseBuildNotification(data);
+	                if (actions_1.isNewBuild(buildNotification, store.getState())) {
+	                    store.dispatch(actions_1.createNotification(buildNotification));
 	                }
 	            },
 	            error: function (xhr, status, err) { return console.error(err.toString()); }
@@ -30945,15 +30941,22 @@
 	    type: exports.types.BUILD_NOTIFICATION,
 	    payload: notification
 	}); };
-	exports.createNotificationFromRawData = function (data) {
-	    return exports.createNotification({
+	exports.parseBuildNotification = function (data) {
+	    return {
 	        buildDate: moment(data.finishDate, "YYYYMMDDTHHmmssZ").toDate(),
 	        buildId: data.buildTypeId,
 	        buildName: data.buildType.projectName,
 	        buildNumber: parseInt(data.number),
 	        success: data.status == "SUCCESS",
 	        statusText: data.statusText
-	    });
+	    };
+	};
+	exports.isNewBuild = function (notification, state) {
+	    var buildState = state.byId[notification.buildId];
+	    if (!buildState) {
+	        return true;
+	    }
+	    return !moment(notification.buildDate).isSame(buildState.lastKnownBuildStatus.buildDate);
 	};
 	exports.createClockTick = function (tick) { return ({
 	    type: exports.types.CLOCK_TICK,
