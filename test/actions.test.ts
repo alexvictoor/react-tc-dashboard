@@ -1,11 +1,13 @@
 import { expect } from "chai";
-import { createNotificationFromRawData, BuildNotification, Action, types } from "../src/actions";
 import * as moment from 'moment';
+import { isNewBuild, parseBuildNotification, createNotification, BuildNotification, Action, types } from "../src/actions";
+import { createStore } from "../src/reducers";
+
+
 
 describe('Action creator', () => {
-
-  it('should parse data from TC', () => {
-    // given
+  
+  // given
     const raw = { 
           "id": 2, 
           "buildTypeId": "Dummy_DuDu", 
@@ -49,25 +51,63 @@ describe('Action creator', () => {
           "relatedIssues": { "href": "/httpAuth/app/rest/builds/id:2/relatedIssues" }, 
           "statistics": { "href": "/httpAuth/app/rest/builds/id:2/statistics" } 
         }
-        
-        // when
-        const notification = createNotificationFromRawData(raw);
-        // then
-        const expected: Action<BuildNotification> = {
-          type: types.BUILD_NOTIFICATION,
-          payload: {
-              buildId: "Dummy_DuDu",
-              buildName: "Dummy",
-              buildNumber: 2,
-              buildDate: new Date(Date.UTC(2016, 8, 4, 17, 26, 50)),
-              success: false,
-              statusText: "Filesystem full (new)"
-              
-          }   
-        };
-        // then
-        expect(notification).to.be.deep.equal(expected);
-        
+
+  it('should parse data from TC', () => {
+    
+      // when
+      const notification = createNotification(parseBuildNotification(raw));
+      // then
+      const expected: Action<BuildNotification> = {
+      type: types.BUILD_NOTIFICATION,
+      payload: {
+            buildId: "Dummy_DuDu",
+            buildName: "Dummy",
+            buildNumber: 2,
+            buildDate: new Date(Date.UTC(2016, 8, 4, 17, 26, 50)),
+            success: false,
+            statusText: "Filesystem full (new)"
+            
+      }   
+      };
+      // then
+      expect(notification).to.be.deep.equal(expected);
+
   });
+
+  it('should detect notification for new build', () => {
+    // given
+    const store = createStore({});
+    const notification = createNotification(parseBuildNotification(raw));
+    store.dispatch(notification);
+    // when
+    const buildNotification = Object.assign(notification.payload, { buildDate: new Date() });
+    const newBuild = isNewBuild(buildNotification, store.getState());
+    // then
+    expect(newBuild).to.be.true;
+  });
+
+  it('should view as new any build on intial state', () => {
+    // given
+    const store = createStore({});
+    // when
+    const buildNotification = parseBuildNotification(raw);
+    const newBuild = isNewBuild(buildNotification, store.getState());
+    // then
+    expect(newBuild).to.be.true;
+  });
+
+  it('should detect notification already consumed', () => {
+    // given
+    const store = createStore({});
+    const notification = createNotification(parseBuildNotification(raw));
+    store.dispatch(notification);
+    // when
+    const buildNotification = parseBuildNotification(raw);
+    const newBuild = isNewBuild(buildNotification, store.getState());
+    // then
+    expect(newBuild).to.be.false;
+  });
+
+
 });
        

@@ -6,7 +6,7 @@ import * as $ from 'jquery';
 
 import App from "./containers/App";
 import { createStore, AppState } from "./reducers";
-import { createClockTick, createNotification, createNotificationFromRawData } from "./actions";
+import { createClockTick, createNotification, parseBuildNotification, isNewBuild } from "./actions";
 import { getLastBuildNumber } from "./build-status-reducers";
 
 interface Configuration {
@@ -18,15 +18,10 @@ interface Configuration {
     builds: string[]
 }
 
-declare const conf : Configuration;
+declare const conf: Configuration;
 
 
 const store = createStore({});
-
-const isNewBuild = (data: any) : boolean => {
-  const buildNumber = parseInt(data.number);
-  return (getLastBuildNumber(data.buildTypeId, store.getState().byId) < buildNumber);
-};
 
 setInterval(() => {
   store.dispatch(createClockTick(new Date()));
@@ -42,10 +37,12 @@ const fetchBuids = () => {
       },
       dataType: 'json',
       cache: false,
-      success: data => { 
-        if (isNewBuild(data)) {
+      success: data => {
+        const buildNotification 
+            = parseBuildNotification(data);
+        if (isNewBuild(buildNotification, store.getState())) {
           store.dispatch(
-            createNotificationFromRawData(data)
+            createNotification(buildNotification)
           );
         } 
       },
