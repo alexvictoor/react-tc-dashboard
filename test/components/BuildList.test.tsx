@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import * as React from 'react';
 import { shallow, mount } from 'enzyme';
 import { ListGroupItem, Label } from "react-bootstrap";
-import BuildList from '../../src/components/BuildList'
+import { BuildList, Duration } from '../../src/components'
 import { BuildShortDescription } from '../../src/build-status-reducers'
 
 
@@ -17,22 +17,14 @@ describe('Component', () => {
     ];
     
     it('should generate one item per build', () => {
-      const wrapper = shallow(<BuildList builds={builds} cssClass="success" />);
+      const wrapper = shallow(<BuildList builds={builds} healthy={true} />);
       expect(wrapper.find(ListGroupItem)).to.have.length(3);
     });
     
     it('should apply cssClass on each build item', () => {
-      const wrapper = shallow(<BuildList builds={builds} cssClass="success" />);
+      const wrapper = shallow(<BuildList builds={builds} healthy={true} />);
       expect(wrapper.find(ListGroupItem).every({bsStyle: "success"})).to.be.true;
     });
 
-    it('should generate a message without label for new builds', () => {
-      const newBuild = [
-        { id: "new", name: "new build", minutesSinceBuild: 9 }
-      ];
-      const wrapper = shallow(<BuildList builds={newBuild} cssClass="success" />);
-      expect(wrapper.find(Label)).to.have.length(0);
-    });
-    
   });
 });
