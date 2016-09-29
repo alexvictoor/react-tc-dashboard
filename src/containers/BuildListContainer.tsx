@@ -3,28 +3,28 @@ import { Grid, Row, Col, Panel } from "react-bootstrap";
 import { Link } from "react-router";
 import { connect } from "react-redux";
 import { AppState, getSuccessfulBuilds, getFailedBuilds } from "../reducers";
+import { BuildShortDescription } from "../build-status-reducers";
 import BuildList from "../components/BuildList"
 
 interface BuildListContainerProps {
-    failedBuilds: string[],
-    successfulBuilds: string[]
+    failedBuilds: BuildShortDescription[],
+    successfulBuilds: BuildShortDescription[]
 } 
 
-const BuildListContainer = ({ failedBuilds, successfulBuilds }: any) => {
+export const BuildListContainer = ({ failedBuilds, successfulBuilds }: BuildListContainerProps) => {
+  const nbBuilds = failedBuilds.length + successfulBuilds.length;
   return (
-    <Panel header="Builds">
-        <BuildList builds={failedBuilds} cssClass="danger" />
-        <BuildList builds={successfulBuilds} cssClass="success" />
+    <Panel header={"Builds (" + nbBuilds + ")"} >
+        <BuildList builds={failedBuilds} healthy={false} />
+        <BuildList builds={successfulBuilds} healthy={true} />
     </Panel>
   );
 }  
 
-
-const mapStateToProps = (state: AppState): any => (
+const mapStateToProps = (state: AppState): BuildListContainerProps => (
   { 
     failedBuilds: getFailedBuilds(state),
     successfulBuilds: getSuccessfulBuilds(state),
-    highlightBuild: ""
   }
 );
 
