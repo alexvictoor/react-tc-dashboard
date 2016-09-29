@@ -82,7 +82,7 @@ export const getBuildHighlight = (state: AppState): BuildDetails => {
       = build.lastKnownBuildStatus.buildNumber - build.lastKnownSuccess.buildNumber - 1;    
     
     result = {
-      id: build.buildName,
+      id: build.buildId,
       name: build.buildName,
       healthy: false,
       brokenTimeInMin,

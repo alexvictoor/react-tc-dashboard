@@ -32,11 +32,13 @@ describe('Selector get build highlight', () => {
     const highlight = reducers.getBuildHighlight(state);
     // then
     const expected: reducers.BuildDetails = {
-      id: "dummy",
+      id: "123",
       name: "dummy",
       healthy: false,
       messageOfFirstBrokenBuild: "sh$ù*m"
     }
+
+    expect(highlight.id).to.equal(expected.id);
     expect(highlight.name).to.equal(expected.name);
     expect(highlight.healthy).to.equal(expected.healthy);
     expect(highlight.messageOfFirstBrokenBuild).to.equal(expected.messageOfFirstBrokenBuild);
