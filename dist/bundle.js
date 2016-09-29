@@ -30696,19 +30696,19 @@
 	var react_redux_1 = __webpack_require__(3);
 	var reducers_1 = __webpack_require__(282);
 	var BuildList_1 = __webpack_require__(288);
-	var BuildListContainer = function (_a) {
+	exports.BuildListContainer = function (_a) {
 	    var failedBuilds = _a.failedBuilds, successfulBuilds = _a.successfulBuilds;
-	    return (React.createElement(react_bootstrap_1.Panel, {header: "Builds"}, 
-	        React.createElement(BuildList_1.default, {builds: failedBuilds, cssClass: "danger"}), 
-	        React.createElement(BuildList_1.default, {builds: successfulBuilds, cssClass: "success"})));
+	    var nbBuilds = failedBuilds.length + successfulBuilds.length;
+	    return (React.createElement(react_bootstrap_1.Panel, {header: "Builds (" + nbBuilds + ")"}, 
+	        React.createElement(BuildList_1.default, {builds: failedBuilds, healthy: false}), 
+	        React.createElement(BuildList_1.default, {builds: successfulBuilds, healthy: true})));
 	};
 	var mapStateToProps = function (state) { return ({
 	    failedBuilds: reducers_1.getFailedBuilds(state),
 	    successfulBuilds: reducers_1.getSuccessfulBuilds(state),
-	    highlightBuild: ""
 	}); };
 	Object.defineProperty(exports, "__esModule", { value: true });
-	exports.default = react_redux_1.connect(mapStateToProps)(function (props) { return BuildListContainer(props); });
+	exports.default = react_redux_1.connect(mapStateToProps)(function (props) { return exports.BuildListContainer(props); });
 
 
 /***/ },
@@ -30762,7 +30762,7 @@
 	            .diff(moment(build.lastKnownFailure.buildDate), "minute");
 	        var numberAttemptsToFix = build.lastKnownBuildStatus.buildNumber - build.lastKnownSuccess.buildNumber - 1;
 	        result = {
-	            id: build.buildName,
+	            id: build.buildId,
 	            name: build.buildName,
 	            healthy: false,
 	            brokenTimeInMin: brokenTimeInMin,
@@ -35246,12 +35246,14 @@
 	var Duration_1 = __webpack_require__(289);
 	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = function (_a) {
-	    var cssClass = _a.cssClass, builds = _a.builds;
+	    var healthy = _a.healthy, builds = _a.builds;
+	    var cssClass = healthy ? "success" : "danger";
+	    var threshold = healthy ? 10 * 60 * 24 : 10;
 	    var buildItems = builds.map(function (build) {
 	        var header = React.createElement("div", null, 
 	            build.name, 
 	            " (", 
-	            React.createElement(Duration_1.default, {minutes: build.minutesSinceBuild}), 
+	            React.createElement(Duration_1.default, {minutes: build.minutesSinceBuild, threshold: threshold}), 
 	            ")");
 	        return (React.createElement(react_bootstrap_1.ListGroupItem, {key: build.id, bsStyle: cssClass, header: header}, build.id));
 	    });
@@ -35335,6 +35337,8 @@
 	exports.AllBuildsGreenHighlight = AllBuildsGreenHighlight_1.default;
 	var BuildList_1 = __webpack_require__(288);
 	exports.BuildList = BuildList_1.default;
+	var Duration_1 = __webpack_require__(289);
+	exports.Duration = Duration_1.default;
 
 
 /***/ },
