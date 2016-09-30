@@ -1,16 +1,9 @@
 import { Action, BuildNotification, types } from "./actions";
 import * as moment from 'moment';
 
-
-export enum BuildEvent {
-  Failed,
-  Repaired
-}
-
 export interface BuildsToDisplayState {
   buildToShowId: string | null;
   ticksSinceBuildWasChoosen: number;
-  buildToShowStatus: BuildEvent | null;
   failedBuilds: string[];
 }
 
@@ -18,7 +11,6 @@ export interface BuildsToDisplayState {
 export default (
   state: BuildsToDisplayState = { 
     buildToShowId: null, 
-    buildToShowStatus: null,
     ticksSinceBuildWasChoosen: 0,
     failedBuilds: [] 
   }, 
@@ -36,14 +28,12 @@ export default (
           = state.failedBuilds.filter(id => id !== buildId);
         return {
           buildToShowId: buildId,
-          buildToShowStatus: BuildEvent.Repaired,
           ticksSinceBuildWasChoosen: 0,
           failedBuilds
         }
       } else if (state.buildToShowId === buildId) {
         return {
           buildToShowId: chooseNewBuild(state),
-          buildToShowStatus: BuildEvent.Failed,
           ticksSinceBuildWasChoosen: 0,
           failedBuilds: state.failedBuilds
         }  
@@ -57,7 +47,6 @@ export default (
 
       return {
         buildToShowId: buildId,
-        buildToShowStatus: BuildEvent.Failed,
         ticksSinceBuildWasChoosen: 0,
         failedBuilds
       }
@@ -70,7 +59,6 @@ export default (
     if (ticks == 1 || state.failedBuilds.length == 0) {
       return {
         buildToShowId: state.buildToShowId,
-        buildToShowStatus: state.buildToShowStatus,
         ticksSinceBuildWasChoosen: (state.ticksSinceBuildWasChoosen + 1),
         failedBuilds: state.failedBuilds
       }
@@ -78,7 +66,6 @@ export default (
       const buildId = chooseNewBuild(state);
       return {
         buildToShowId: buildId,
-        buildToShowStatus: state.buildToShowStatus,
         ticksSinceBuildWasChoosen: 0,
         failedBuilds: state.failedBuilds
       }

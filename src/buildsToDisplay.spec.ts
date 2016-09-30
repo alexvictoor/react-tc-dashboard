@@ -57,7 +57,6 @@ describe('Builds to display reducer', () => {
     expect(initial).to.deep.equal(
       { 
         buildToShowId: null, 
-        buildToShowStatus: null,
         ticksSinceBuildWasChoosen:0,
         failedBuilds: [] 
       }
