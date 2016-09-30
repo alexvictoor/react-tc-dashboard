@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { Store } from "redux"
-import * as reducers from "../src/reducers";
-import * as actions from "../src/actions";
+import * as reducers from "./reducers";
+import * as actions from "./actions";
 
 import "core-js";
 

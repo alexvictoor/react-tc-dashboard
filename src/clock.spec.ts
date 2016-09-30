@@ -1,6 +1,6 @@
 import { expect } from "chai";
-import * as actions from "../src/actions";
-import clock from "../src/clock"
+import * as actions from "./actions";
+import clock from "./clock"
 
 describe('Clock reducer', () => {
 

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import * as React from 'react';
 import { shallow, mount } from 'enzyme';
-import RepairedBuildHighlight from '../../src/components/RepairedBuildHighlight';
+import RepairedBuildHighlight from './RepairedBuildHighlight';
 
 describe('RepairedBuildHighlight', () => {
 

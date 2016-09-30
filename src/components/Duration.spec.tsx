@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import * as React from 'react';
 import { Label } from "react-bootstrap";
 import { shallow, mount } from 'enzyme';
-import Duration from '../../src/components/Duration';
+import Duration from './Duration';
 
 describe('Duration', () => {
 

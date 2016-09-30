@@ -13,14 +13,14 @@ module.exports = function (config) {
     basePath: '',
     frameworks: ['mocha', 'chai', 'sinon'],
     files: [
-      'test/**/*.ts',
-      'test/**/*.tsx',
+      'src/**/*.spec.ts',
+      'src/**/*.spec.tsx',
     ],
     exclude: [
     ],
     preprocessors: {
-      'test/**/*.ts': ['webpack'],
-      'test/**/*.tsx': ['webpack'],
+      'src/**/*.spec.ts': ['webpack'],
+      'src/**/*.spec.tsx': ['webpack'],
     },
     webpack: {
       module: webpackConfig.module,

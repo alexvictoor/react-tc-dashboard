@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import * as moment from 'moment';
-import { isNewBuild, parseBuildNotification, createNotification, BuildNotification, Action, types } from "../src/actions";
-import { createStore } from "../src/reducers";
+import { isNewBuild, parseBuildNotification, createNotification, BuildNotification, Action, types } from "./actions";
+import { createStore } from "./reducers";
 
 
 
