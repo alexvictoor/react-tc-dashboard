@@ -3,7 +3,7 @@ import { Grid, Row, Col, Panel } from "react-bootstrap";
 import { Link } from "react-router";
 import { connect } from "react-redux";
 import { AppState, getSuccessfulBuilds, getFailedBuilds } from "../reducers";
-import { BuildShortDescription } from "../build-status-reducers";
+import { BuildShortDescription } from "../byId";
 import BuildList from "../components/BuildList"
 
 interface BuildListContainerProps {

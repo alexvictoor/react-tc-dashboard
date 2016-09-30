@@ -5,9 +5,8 @@ import { Provider } from 'react-redux';
 import * as $ from 'jquery';
 
 import App from "./containers/App";
-import { createStore, AppState } from "./reducers";
+import { createStore, AppState, getLastBuildNumber } from "./reducers";
 import { createClockTick, createNotification, parseBuildNotification, isNewBuild } from "./actions";
-import { getLastBuildNumber } from "./build-status-reducers";
 
 interface Configuration {
     teamcityUrl: string,

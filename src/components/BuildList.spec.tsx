@@ -3,7 +3,7 @@ import * as React from 'react';
 import { shallow, mount } from 'enzyme';
 import { ListGroupItem, Label } from "react-bootstrap";
 import { BuildList, Duration } from '.'
-import { BuildShortDescription } from '../build-status-reducers'
+import { BuildShortDescription } from '../byId'
 
 
 describe('Component', () => {
