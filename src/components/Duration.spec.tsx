@@ -18,7 +18,7 @@ describe('Duration', () => {
 
     it('should return the number of minutes if less than 1h/60min', () => {
       // given
-      const minutes = Math.floor(Math.random() * 59);
+      const minutes = Math.floor(Math.random() * 57 + 2);
       // when
       const wrapper = mount(
         <Duration 

@@ -2,6 +2,7 @@ import * as React from "react";
 import { Panel, Label } from "react-bootstrap";
 import { BuildDetails } from "../reducers";
 import Duration from "./Duration";
+import MediaHighlight from "./MediaHighlight";
 
 interface FailedBuildHighlightProps {
   id: string;
@@ -33,10 +34,7 @@ export default (
       
     return (
           <Panel header={header} bsStyle="danger" bsSize="large">
-            <img 
-              src={picture} 
-              style={{maxHeight: "100%", maxWidth: "100%" }} 
-            />
+            <MediaHighlight picture={picture} />
             <h2>{bigMsg}</h2>
             {durationSection}
             <p>Build broken with following message: {messageOfFirstBrokenBuild}</p>

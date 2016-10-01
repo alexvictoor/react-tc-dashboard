@@ -31,6 +31,8 @@ export const BuildHighlightContainer = (
  
   const pictures = healthy ? conf.successPictures : conf.failurePictures;
   const picture =  pictures[Math.floor(Math.random() * pictures.length)];
+
+  console.log("render build highlight")
  
   let highlight: any;
   if (healthy) {

@@ -15,6 +15,9 @@ var conf =  {
     successPictures: [
         "img/success/The_fonz_thumbs_up.jpg",
         "img/success/ww.gif",
+        "img/success/pinguin.mp4",
+        "img/success/plane.mp4",
+        "img/success/segway.mp4",
          
     ],
     failurePictures: [
