@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import byId, { BuildsByIdState, getSuccessfulBuilds, getFailedBuilds, getLastBuildNumber } from "./byId"
+import byId, { BuildsByIdState, getSuccessfulBuilds, getFailedBuilds } from "./byId"
 import { Action, BuildNotification, types, createClockTick  } from "./actions"
 
 import "core-js"
@@ -61,7 +61,7 @@ describe('Builds by id reducer', () => {
     const newState = byId({}, action);
     // then
     expect(newState["dummy"].lastKnownSuccess).to.be.not.null;
-    expect(newState["dummy"].lastKnownSuccess.buildNumber).to.equal(action.payload.buildNumber);
+    expect(newState["dummy"].lastKnownSuccess.buildDate).to.equal(action.payload.buildDate);
     expect(newState["dummy"].lastKnownSuccess.text).to.equal(action.payload.statusText);
     
   });
@@ -75,7 +75,7 @@ describe('Builds by id reducer', () => {
     const newState = byId({}, action);
     // then
     expect(newState["dummy"].lastKnownFailure).to.be.not.null;
-    expect(newState["dummy"].lastKnownFailure.buildNumber).to.equal(action.payload.buildNumber); 
+    expect(newState["dummy"].lastKnownFailure.buildDate).to.equal(action.payload.buildDate); 
   });
   
   it('should not update last known success build on failure notification', () => 
@@ -89,7 +89,7 @@ describe('Builds by id reducer', () => {
     const newState = byId(previousState, action);
     
     // then
-    expect(newState["dummy"].lastKnownSuccess.buildNumber).to.equal(previousAction.payload.buildNumber);
+    expect(newState["dummy"].lastKnownSuccess.buildDate).to.equal(previousAction.payload.buildDate);
   });
   
   it('should not update last known failed build on success notification', () => 
@@ -102,7 +102,7 @@ describe('Builds by id reducer', () => {
     const newState = byId(previousState, createBuildNotification());
     
     // then
-    expect(newState["dummy"].lastKnownFailure.buildNumber).to.equal(previousAction.payload.buildNumber);
+    expect(newState["dummy"].lastKnownFailure.buildDate).to.equal(previousAction.payload.buildDate);
   });
   
   it('should keep last known failed build when there is a success notification', () => 
@@ -117,7 +117,7 @@ describe('Builds by id reducer', () => {
     const thirdState = byId(secondState, createBuildNotification(true));
     
     // then
-    expect(thirdState["dummy"].lastKnownFailure.buildNumber).to.equal(secondFailureAction.payload.buildNumber);
+    expect(thirdState["dummy"].lastKnownFailure.buildDate).to.equal(secondFailureAction.payload.buildDate);
   });
   
 });
@@ -193,25 +193,6 @@ describe('Build status selectors', () => {
     const builds = getSuccessfulBuilds(state, now);
     // then
     expect(builds.map(build => build.id)).to.be.deep.equal(["B", "C", "A"]);
-  });
-   
-  it('should get last build number', () => {
-    // given
-    const expectedNumber = buildNumber;
-    const state = byId({}, createBuildNotification());
-    // when
-    const result = getLastBuildNumber("dummy", state)
-    // then
-    expect(result).to.be.equal(expectedNumber);
-  });
-  
-  it('should get 0 as a build number for unknown build', () => {
-    // given
-    const state = byId({}, createBuildNotification());
-    // when
-    const result = getLastBuildNumber("bullshit", state)
-    // then
-    expect(result).to.be.equal(0);
   });
 
   const buildState = (actions: Array<Action<any>>, initialState: BuildsByIdState = {}) => (

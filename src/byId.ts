@@ -4,6 +4,7 @@ import * as moment from 'moment';
 interface Build {
   buildId: string;
   buildName: string;  
+  buildsSinceLastStatusChange: number;
   lastKnownBuildStatus: BuildStatus,
   lastKnownSuccess: BuildStatus,
   lastKnownFailure: BuildStatus
@@ -11,7 +12,6 @@ interface Build {
 
 interface BuildStatus {
   success: boolean;
-  buildNumber: number;
   buildDate: Date;  
   text: string;
 }
@@ -40,21 +40,30 @@ export default (state: BuildsByIdState = {}, action?: Action<BuildNotification>)
       {
           buildId : notification.buildId,
           buildName : notification.buildName,  
-          lastKnownBuildStatus: null,
+          buildsSinceLastStatusChange: 0,
+          lastKnownBuildStatus: {
+            success: true,
+            buildDate: notification.buildDate,
+            text: ""
+          },
           lastKnownSuccess: {
             success: true,
             buildDate: notification.buildDate,
-            buildNumber: notification.buildNumber - 1,
             text: ""
           },
           lastKnownFailure: null
       }
     );
 
+    if (notification.success === build.lastKnownBuildStatus.success) {
+        build.buildsSinceLastStatusChange++;
+    } else {
+        build.buildsSinceLastStatusChange = 0;
+    }
+
     build.lastKnownBuildStatus = {
       success: notification.success,
       buildDate: notification.buildDate,
-      buildNumber: notification.buildNumber,
       text: notification.statusText
     };
     
@@ -104,12 +113,5 @@ export const getSuccessfulBuilds = (state : BuildsByIdState, now = new Date()) :
 
 export const getFailedBuilds = (state : BuildsByIdState, now = new Date()) : BuildShortDescription[] => {
   return getBuildsByStatus(state, false, now);
-}
-
-export const getLastBuildNumber = (id : string, state : BuildsByIdState) : number => {
-  if (state[id]) {
-    return state[id].lastKnownBuildStatus.buildNumber;
-  }
-  return 0;
 }
 

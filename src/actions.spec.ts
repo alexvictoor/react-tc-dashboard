@@ -62,7 +62,6 @@ describe('Action creator', () => {
       payload: {
             buildId: "Dummy_DuDu",
             buildName: "Dummy",
-            buildNumber: 2,
             buildDate: new Date(Date.UTC(2016, 8, 4, 17, 26, 50)),
             success: false,
             statusText: "Filesystem full (new)"

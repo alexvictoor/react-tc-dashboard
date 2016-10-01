@@ -11,7 +11,6 @@ import  byId, {
   BuildShortDescription, 
   getFailedBuilds as doGetFailedBuilds, 
   getSuccessfulBuilds as doGetSuccessfulBuilds,
-  getLastBuildNumber as doGetLastBuildNumber
 }  from "./byId";
 
 import buildsToDisplay, { 
@@ -53,11 +52,6 @@ export const getFailedBuilds = (state : AppState) : BuildShortDescription[] => {
   return doGetFailedBuilds(state.byId, state.clock);
 }
 
-export const getLastBuildNumber = (id : string, state : AppState) : number => {
-  return doGetLastBuildNumber(id, state.byId);
-}
-
-
 export interface BuildDetails {
   id: string,
   name: string,
@@ -96,7 +90,7 @@ export const getBuildHighlight = (state: AppState): BuildDetails => {
         );
         
     const numberAttemptsToFix 
-      = build.lastKnownBuildStatus.buildNumber - build.lastKnownSuccess.buildNumber - 1;    
+      = build.buildsSinceLastStatusChange;    
     
     result = {
       id: build.buildId,

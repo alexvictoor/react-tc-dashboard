@@ -23,7 +23,6 @@ describe('Selector get build highlight', () => {
       buildId: "123",
       buildDate: new Date(),
       buildName: "dummy",
-      buildNumber: 12,
       success: false,
       statusText: "sh$ù*m"
     }));
@@ -51,7 +50,6 @@ describe('Selector get build highlight', () => {
       buildId: "123",
       buildDate: new Date(2016, 1, 1, 1, 0),
       buildName: "dummy",
-      buildNumber: 12,
       success: false,
       statusText: "baad"
     }));
@@ -71,7 +69,6 @@ describe('Selector get build highlight', () => {
       buildId: "123",
       buildDate: new Date(2016, 1, 1, 0, 0),
       buildName: "dummy",
-      buildNumber: 11,
       success: true,
       statusText: ""
     }));
@@ -79,7 +76,6 @@ describe('Selector get build highlight', () => {
       buildId: "123",
       buildDate: new Date(2016, 1, 1, 1, 0),
       buildName: "dummy",
-      buildNumber: 12,
       success: false,
       statusText: ""
     }));
@@ -87,7 +83,6 @@ describe('Selector get build highlight', () => {
       buildId: "123",
       buildDate: new Date(2016, 1, 1, 1, 1),
       buildName: "dummy",
-      buildNumber: 13,
       success: false,
       statusText: ""
     }));
@@ -95,7 +90,7 @@ describe('Selector get build highlight', () => {
     const state = store.getState();
     const highlight = reducers.getBuildHighlight(state);
     // then
-    expect(highlight.numberAttemptsToFix).to.equal(13 - 11 - 1);   
+    expect(highlight.numberAttemptsToFix).to.equal(1);   
   });
 
 
@@ -105,7 +100,6 @@ describe('Selector get build highlight', () => {
       buildId: "123",
       buildDate: new Date(2016, 1, 1, 0, 0),
       buildName: "dummy",
-      buildNumber: 11,
       success: true,
       statusText: ""
     }));
@@ -113,7 +107,6 @@ describe('Selector get build highlight', () => {
       buildId: "456",
       buildDate: new Date(2016, 1, 1, 1, 0),
       buildName: "dummy",
-      buildNumber: 12,
       success: true,
       statusText: ""
     }));

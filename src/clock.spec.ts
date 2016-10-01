@@ -11,7 +11,6 @@ describe('Clock reducer', () => {
         buildId: "123",
         buildDate: new Date(2000, 1),
         buildName: "dummy",
-        buildNumber: 12,
         success: false,
         statusText: ""
       })
