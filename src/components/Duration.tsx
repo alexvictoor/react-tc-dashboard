@@ -12,6 +12,8 @@ export default ({ minutes, threshold = 10, bsStyle }: Props): React.ReactElement
   const lessThanTWo = (minutes < 2);
   const lessThanOneHour = (minutes < 60);
   const lessThanTwoHours = (minutes < 120);
+  const lessThanOneDay = (minutes < 60 * 24);
+  const lessThanTwoDays = (minutes < 60 * 24 * 2);
   
   const PassThrough = (props: any) => <span>{props.children}</span>
   const BsLabel = (props: any) => <Label bsStyle={bsStyle} >{props.children}</Label>
@@ -24,7 +26,11 @@ export default ({ minutes, threshold = 10, bsStyle }: Props): React.ReactElement
       (<span><Container>{minutes} minutes</Container> ago</span>) 
       : lessThanTwoHours ?
       (<span><Container>1 hour</Container> ago</span>)
-      : (<span><Container>{Math.floor(minutes/60)} hours</Container> ago</span>);
+      : lessThanOneDay ?
+      (<span><Container>{Math.floor(minutes/60)} hours</Container> ago</span>)
+      : lessThanTwoDays ?
+      (<span><Container>1 day</Container> ago</span>)
+      : (<span><Container>{Math.floor(minutes/60/24)} days</Container> ago</span>);
   
   return result;
 }

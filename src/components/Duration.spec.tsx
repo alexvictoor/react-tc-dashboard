@@ -55,6 +55,32 @@ describe('Duration', () => {
       expect(wrapper.text()).to.contain(`2 hours ago`)
     })
 
+    it('should return one day when more than 24 hours', () => {
+      // given
+      const minutes = 24 * 60 + 33;
+      // when
+      const wrapper = mount(
+        <Duration 
+           minutes={minutes} 
+        />
+      );
+      // then
+      expect(wrapper.text()).to.contain(`1 day ago`)
+    })
+
+    it('should return X days when more than 48 hours', () => {
+      // given
+      const minutes = 24 * 60 * 2 + 33;
+      // when
+      const wrapper = mount(
+        <Duration 
+           minutes={minutes} 
+        />
+      );
+      // then
+      expect(wrapper.text()).to.contain(`2 days ago`)
+    })
+
 
     it('should return a Label instead of a span when above threshold', () => {
       // given
