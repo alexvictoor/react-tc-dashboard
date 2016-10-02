@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import * as React from 'react';
 import { Label } from "react-bootstrap";
 import { shallow, mount } from 'enzyme';
-import Duration from '../../src/components/Duration';
+import Duration from './Duration';
 
 describe('Duration', () => {
 
@@ -18,7 +18,7 @@ describe('Duration', () => {
 
     it('should return the number of minutes if less than 1h/60min', () => {
       // given
-      const minutes = Math.floor(Math.random() * 59);
+      const minutes = Math.floor(Math.random() * 57 + 2);
       // when
       const wrapper = mount(
         <Duration 
@@ -53,6 +53,32 @@ describe('Duration', () => {
       );
       // then
       expect(wrapper.text()).to.contain(`2 hours ago`)
+    })
+
+    it('should return one day when more than 24 hours', () => {
+      // given
+      const minutes = 24 * 60 + 33;
+      // when
+      const wrapper = mount(
+        <Duration 
+           minutes={minutes} 
+        />
+      );
+      // then
+      expect(wrapper.text()).to.contain(`1 day ago`)
+    })
+
+    it('should return X days when more than 48 hours', () => {
+      // given
+      const minutes = 24 * 60 * 2 + 33;
+      // when
+      const wrapper = mount(
+        <Duration 
+           minutes={minutes} 
+        />
+      );
+      // then
+      expect(wrapper.text()).to.contain(`2 days ago`)
     })
 
 

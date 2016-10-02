@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ListGroup, ListGroupItem, Label  } from "react-bootstrap";
-import { BuildShortDescription } from "../build-status-reducers"
+import { BuildShortDescription } from "../byId"
 import Duration from "./Duration";
 
 interface BuildListProps {

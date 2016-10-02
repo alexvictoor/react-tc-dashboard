@@ -1,6 +1,6 @@
 import { expect } from "chai";
-import * as actions from "../src/actions";
-import clock from "../src/clock"
+import * as actions from "./actions";
+import clock from "./clock"
 
 describe('Clock reducer', () => {
 
@@ -11,7 +11,6 @@ describe('Clock reducer', () => {
         buildId: "123",
         buildDate: new Date(2000, 1),
         buildName: "dummy",
-        buildNumber: 12,
         success: false,
         statusText: ""
       })

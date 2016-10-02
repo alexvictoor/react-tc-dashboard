@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import { BuildHighlightContainer } from '../../src/containers/BuildHighlightContainer'
-import  { RepairedBuildHighlight, FailedBuildHighlight, AllBuildsGreenHighlight } from "../../src/components"
+import { BuildHighlightContainer } from './BuildHighlightContainer'
+import  { RepairedBuildHighlight, FailedBuildHighlight, AllBuildsGreenHighlight } from "../components"
 
 
 

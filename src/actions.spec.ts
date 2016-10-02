@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import * as moment from 'moment';
-import { isNewBuild, parseBuildNotification, createNotification, BuildNotification, Action, types } from "../src/actions";
-import { createStore } from "../src/reducers";
+import { isNewBuild, parseBuildNotification, createNotification, BuildNotification, Action, types } from "./actions";
+import { createStore } from "./reducers";
 
 
 
@@ -62,7 +62,6 @@ describe('Action creator', () => {
       payload: {
             buildId: "Dummy_DuDu",
             buildName: "Dummy",
-            buildNumber: 2,
             buildDate: new Date(Date.UTC(2016, 8, 4, 17, 26, 50)),
             success: false,
             statusText: "Filesystem full (new)"

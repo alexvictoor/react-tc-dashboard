@@ -10,7 +10,6 @@ export interface BuildNotification {
     success : boolean;
     buildId : string;
     buildName : string;    
-    buildNumber: number;
     buildDate: Date;
     statusText: string;
 }
@@ -33,7 +32,6 @@ export const parseBuildNotification = (data: any): BuildNotification => {
     buildDate: moment(data.finishDate, "YYYYMMDDTHHmmssZ").toDate(), 
     buildId: data.buildTypeId,
     buildName: data.buildType.projectName,
-    buildNumber: parseInt(data.number),
     success: data.status == "SUCCESS",
     statusText: data.statusText
   };

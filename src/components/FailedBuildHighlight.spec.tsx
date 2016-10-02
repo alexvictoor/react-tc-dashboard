@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import * as React from 'react';
 import { shallow, mount } from 'enzyme';
-import FailedBuildHighlight from '../../src/components/FailedBuildHighlight';
+import FailedBuildHighlight from './FailedBuildHighlight';
 
 describe('FailedBuildHighlight', () => {
 

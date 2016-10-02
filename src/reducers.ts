@@ -1,6 +1,23 @@
-import { createStore as reduxCreateStore, applyMiddleware, combineReducers, ReducersMapObject, Store } from "redux";
-import { byId, buildsToDisplay, BuildsByIdState, BuildsToDisplayState, BuildShortDescription } from "./build-status-reducers"; 
-import  * as builds from "./build-status-reducers";
+import { 
+  createStore as reduxCreateStore, 
+  applyMiddleware, 
+  combineReducers, 
+  ReducersMapObject, 
+  Store 
+} from "redux";
+
+import  byId, { 
+  BuildsByIdState, 
+  BuildShortDescription, 
+  getLatestBuildDate,
+  getFailedBuilds as doGetFailedBuilds, 
+  getSuccessfulBuilds as doGetSuccessfulBuilds,
+}  from "./byId";
+
+import buildsToDisplay, { 
+  BuildsToDisplayState 
+} from "./buildsToDisplay"
+
 import clock from "./clock"
 import * as moment from 'moment';
 
@@ -29,35 +46,41 @@ export const createStore = (initialState : any) : Store<AppState> => {
 }
 
 export const getSuccessfulBuilds = (state : AppState) : BuildShortDescription[] => {
-  return builds.getSuccessfulBuilds(state.byId, state.clock);
+  return doGetSuccessfulBuilds(state.byId, state.clock);
 }
 
 export const getFailedBuilds = (state : AppState) : BuildShortDescription[] => {
-  return builds.getFailedBuilds(state.byId, state.clock);
+  return doGetFailedBuilds(state.byId, state.clock);
 }
-
-export const getLastBuildNumber = (id : string, state : AppState) : number => {
-  return builds.getLastBuildNumber(id, state.byId);
-}
-
 
 export interface BuildDetails {
-  id: string,
+  id?: string,
   name: string,
   healthy: boolean,
   brokenTimeInMin?: number,
   numberAttemptsToFix?: number,
-  messageOfFirstBrokenBuild?: string
+  messageOfFirstBrokenBuild?: string,
+  timeBeingGreenInMin?: number
 }
 
 export const getBuildHighlight = (state: AppState): BuildDetails => {
   
   const id = state.buildsToDisplay.buildToShowId;
   if (!id) {
+    // all builds are green
+    const latestBuildDate = getLatestBuildDate(state.byId);
+    const timeBeingGreen
+      = moment(state.clock)
+        .diff(
+          moment(latestBuildDate), 
+          "minute"
+        );
+
     return {
       id: "ALL",
       name: "ALL",
-      healthy: true
+      healthy: true,
+      timeBeingGreenInMin: timeBeingGreen
     }
   }
 
@@ -79,7 +102,7 @@ export const getBuildHighlight = (state: AppState): BuildDetails => {
         );
         
     const numberAttemptsToFix 
-      = build.lastKnownBuildStatus.buildNumber - build.lastKnownSuccess.buildNumber - 1;    
+      = build.buildsSinceLastStatusChange;    
     
     result = {
       id: build.buildId,

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import { BuildListContainer } from '../../src/containers/BuildListContainer'
+import { BuildListContainer } from './BuildListContainer'
 
 describe('BuildListContainer', () => {
   

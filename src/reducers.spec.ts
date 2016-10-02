@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { Store } from "redux"
-import * as reducers from "../src/reducers";
-import * as actions from "../src/actions";
+import * as reducers from "./reducers";
+import * as actions from "./actions";
 
 import "core-js";
 
@@ -23,7 +23,6 @@ describe('Selector get build highlight', () => {
       buildId: "123",
       buildDate: new Date(),
       buildName: "dummy",
-      buildNumber: 12,
       success: false,
       statusText: "sh$ù*m"
     }));
@@ -51,7 +50,6 @@ describe('Selector get build highlight', () => {
       buildId: "123",
       buildDate: new Date(2016, 1, 1, 1, 0),
       buildName: "dummy",
-      buildNumber: 12,
       success: false,
       statusText: "baad"
     }));
@@ -71,7 +69,6 @@ describe('Selector get build highlight', () => {
       buildId: "123",
       buildDate: new Date(2016, 1, 1, 0, 0),
       buildName: "dummy",
-      buildNumber: 11,
       success: true,
       statusText: ""
     }));
@@ -79,7 +76,6 @@ describe('Selector get build highlight', () => {
       buildId: "123",
       buildDate: new Date(2016, 1, 1, 1, 0),
       buildName: "dummy",
-      buildNumber: 12,
       success: false,
       statusText: ""
     }));
@@ -87,7 +83,6 @@ describe('Selector get build highlight', () => {
       buildId: "123",
       buildDate: new Date(2016, 1, 1, 1, 1),
       buildName: "dummy",
-      buildNumber: 13,
       success: false,
       statusText: ""
     }));
@@ -95,17 +90,16 @@ describe('Selector get build highlight', () => {
     const state = store.getState();
     const highlight = reducers.getBuildHighlight(state);
     // then
-    expect(highlight.numberAttemptsToFix).to.equal(13 - 11 - 1);   
+    expect(highlight.numberAttemptsToFix).to.equal(1);   
   });
 
 
-  it('should return an empty detail with name ALL when all builds are green', () => {
+  it('should return an all green result when all builds green', () => {
     // given
     store.dispatch(actions.createNotification({
       buildId: "123",
       buildDate: new Date(2016, 1, 1, 0, 0),
       buildName: "dummy",
-      buildNumber: 11,
       success: true,
       statusText: ""
     }));
@@ -113,7 +107,6 @@ describe('Selector get build highlight', () => {
       buildId: "456",
       buildDate: new Date(2016, 1, 1, 1, 0),
       buildName: "dummy",
-      buildNumber: 12,
       success: true,
       statusText: ""
     }));
@@ -121,7 +114,33 @@ describe('Selector get build highlight', () => {
     const state = store.getState();
     const highlight = reducers.getBuildHighlight(state);
     // then
-    expect(highlight.name).to.equal("ALL");
+    expect(highlight.timeBeingGreenInMin).to.not.be.undefined;
+  });
+
+  it('should returnthe number of minutes since all builds green', () => {
+    // given
+    store.dispatch(actions.createNotification({
+      buildId: "123",
+      buildDate: new Date(2016, 1, 1, 0, 0),
+      buildName: "dummy",
+      success: true,
+      statusText: ""
+    }));
+    store.dispatch(actions.createNotification({
+      buildId: "456",
+      buildDate: new Date(2016, 1, 1, 1, 0),
+      buildName: "dummy",
+      success: true,
+      statusText: ""
+    }));
+    store.dispatch(actions.createClockTick(
+      new Date(2016, 1, 1, 1, 42)
+    ));
+    // when
+    const state = store.getState();
+    const highlight = reducers.getBuildHighlight(state);
+    // then
+    expect(highlight.timeBeingGreenInMin).to.be.equal(42);
   });
   
   
