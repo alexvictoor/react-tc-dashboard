@@ -24,6 +24,10 @@ var conf =  {
         "img/failure/3504CB1A00000578-0-image-m-75_1465335445366.jpg",
         "img/failure/3504CB3D00000578-3630245-One_picture_shows_a_road_sign_reading_Thank_you_for_driving_care-a-15_1465487772743.jpg",
         "img/failure/poney.jpg",
-        "img/failure/snake.jpg"  
+        "img/failure/snake.jpg",
+        "img/failure/CqpC7Z1XYAAkCsF.jpg",
+        "img/failure/Crw1sJBWEAA8IbP.mp4",
+        "img/failure/Cs-m1o1WcAATpeA.mp4"
+
     ]
 }
