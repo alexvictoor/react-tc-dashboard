@@ -9,6 +9,7 @@ import {
 import  byId, { 
   BuildsByIdState, 
   BuildShortDescription, 
+  getLatestBuildDate,
   getFailedBuilds as doGetFailedBuilds, 
   getSuccessfulBuilds as doGetSuccessfulBuilds,
 }  from "./byId";
@@ -53,22 +54,33 @@ export const getFailedBuilds = (state : AppState) : BuildShortDescription[] => {
 }
 
 export interface BuildDetails {
-  id: string,
+  id?: string,
   name: string,
   healthy: boolean,
   brokenTimeInMin?: number,
   numberAttemptsToFix?: number,
-  messageOfFirstBrokenBuild?: string
+  messageOfFirstBrokenBuild?: string,
+  timeBeingGreenInMin?: number
 }
 
 export const getBuildHighlight = (state: AppState): BuildDetails => {
   
   const id = state.buildsToDisplay.buildToShowId;
   if (!id) {
+    // all builds are green
+    const latestBuildDate = getLatestBuildDate(state.byId);
+    const timeBeingGreen
+      = moment(state.clock)
+        .diff(
+          moment(latestBuildDate), 
+          "minute"
+        );
+
     return {
       id: "ALL",
       name: "ALL",
-      healthy: true
+      healthy: true,
+      timeBeingGreenInMin: timeBeingGreen
     }
   }
 

@@ -1,10 +1,12 @@
 import { Action, BuildNotification, types } from "./actions";
 import * as moment from 'moment';
+import "core-js";
 
 interface Build {
   buildId: string;
   buildName: string;  
   buildsSinceLastStatusChange: number;
+  buildDateOfLastStatusChange: Date;
   lastKnownBuildStatus: BuildStatus,
   lastKnownSuccess: BuildStatus,
   lastKnownFailure: BuildStatus
@@ -30,17 +32,18 @@ const copy = <T>  (src : T) : T => {
 }
 
 
-export default (state: BuildsByIdState = {}, action?: Action<BuildNotification>) : BuildsByIdState => {
+export default (state: BuildsByIdState = {}, action?: Action<BuildNotification>): BuildsByIdState => {
   if (action && action.type === types.BUILD_NOTIFICATION) {
 
     const notification = action.payload;
 
-    const build : Build = copy(
+    const build: Build = Object.assign(
       state[notification.buildId] || 
       {
           buildId : notification.buildId,
           buildName : notification.buildName,  
           buildsSinceLastStatusChange: 0,
+          buildDateOfLastStatusChange: notification.buildDate,
           lastKnownBuildStatus: {
             success: true,
             buildDate: notification.buildDate,
@@ -59,6 +62,7 @@ export default (state: BuildsByIdState = {}, action?: Action<BuildNotification>)
         build.buildsSinceLastStatusChange++;
     } else {
         build.buildsSinceLastStatusChange = 0;
+        build.buildDateOfLastStatusChange = notification.buildDate;
     }
 
     build.lastKnownBuildStatus = {
@@ -90,7 +94,7 @@ export interface BuildShortDescription {
   minutesSinceBuild: number;
 }
 
-const getBuildsByStatus = (state : BuildsByIdState, success : boolean, now = new Date()) : BuildShortDescription[] => {
+const getBuildsByStatus = (state: BuildsByIdState, success: boolean, now = new Date()): BuildShortDescription[] => {
   const result: BuildShortDescription[] = [];
   for (var key in state) {
     const build = state[key];
@@ -104,14 +108,23 @@ const getBuildsByStatus = (state : BuildsByIdState, success : boolean, now = new
       result.push({ id: build.buildId, name: build.buildName, minutesSinceBuild });
     }
   }
-  return result.sort((b1, b2) => b1.minutesSinceBuild  - b2.minutesSinceBuild);
+  return result.sort((b1, b2) => b1.minutesSinceBuild - b2.minutesSinceBuild);
 }
 
-export const getSuccessfulBuilds = (state : BuildsByIdState, now = new Date()) : BuildShortDescription[] => {
+export const getSuccessfulBuilds = (state: BuildsByIdState, now = new Date()): BuildShortDescription[] => {
   return getBuildsByStatus(state, true, now);
 }
 
-export const getFailedBuilds = (state : BuildsByIdState, now = new Date()) : BuildShortDescription[] => {
+export const getFailedBuilds = (state: BuildsByIdState, now = new Date()): BuildShortDescription[] => {
   return getBuildsByStatus(state, false, now);
 }
+
+export const getLatestBuildDate = (state: BuildsByIdState): Date => {
+  return Object.values(state).reduce((lastBuildDate: Date, build: Build) => {
+    if (build.lastKnownBuildStatus.buildDate > lastBuildDate) {
+      return build.lastKnownBuildStatus.buildDate;
+    }
+    return lastBuildDate;
+  }, new Date(0));
+} 
 

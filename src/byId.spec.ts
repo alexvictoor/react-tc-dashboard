@@ -119,6 +119,38 @@ describe('Builds by id reducer', () => {
     // then
     expect(thirdState["dummy"].lastKnownFailure.buildDate).to.equal(secondFailureAction.payload.buildDate);
   });
+
+  it('should set to 0 builds since last status change on build fix and get date of fixed build', () => 
+  {
+    // given
+    const failureAction = createBuildNotification(false);
+    const firstState = byId({}, failureAction);
+    const fixAction = createBuildNotification(true);
+    
+    // when
+    const fixedState = byId(firstState, fixAction);
+    
+    // then
+    expect(fixedState["dummy"].buildsSinceLastStatusChange).to.equal(0);
+    expect(fixedState["dummy"].buildDateOfLastStatusChange).to.equal(fixAction.payload.buildDate);
+  });
+
+  it('should update builds since last status change on new successful build', () => 
+  {
+    // given
+    const failureAction = createBuildNotification(false);
+    const firstState = byId({}, failureAction);
+    const fixAction = createBuildNotification(true);
+    const fixedState = byId(firstState, fixAction);
+    
+    // when
+    const successAction = createBuildNotification(true);
+    const successState = byId(fixedState, successAction);
+    
+    // then
+    expect(successState["dummy"].buildsSinceLastStatusChange).to.equal(1);
+    expect(successState["dummy"].buildDateOfLastStatusChange).to.equal(fixAction.payload.buildDate);
+  });
   
 });
 

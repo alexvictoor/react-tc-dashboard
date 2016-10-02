@@ -5,15 +5,8 @@ import { AppState, BuildDetails, getBuildHighlight } from "../reducers";
 import { RepairedBuildHighlight, FailedBuildHighlight, AllBuildsGreenHighlight } from "../components"
 
 
-//type BuildHightlightContainerProps = BuildDetails; 
-export interface BuildHightlightContainerProps {
-  id?: string,
-  name: string,
-  healthy: boolean,
-  brokenTimeInMin?: number,
-  numberAttemptsToFix?: number,
-  messageOfFirstBrokenBuild?: string
-}
+type BuildHightlightContainerProps = BuildDetails; 
+
 
 declare const conf : { failurePictures: string[], successPictures: string[] };
 
@@ -25,19 +18,18 @@ export const BuildHighlightContainer = (
     healthy,
     brokenTimeInMin,
     numberAttemptsToFix,
-    messageOfFirstBrokenBuild 
+    messageOfFirstBrokenBuild,
+    timeBeingGreenInMin 
   }
   : BuildHightlightContainerProps ) => {
- 
+
   const pictures = healthy ? conf.successPictures : conf.failurePictures;
   const picture =  pictures[Math.floor(Math.random() * pictures.length)];
-
-  console.log("render build highlight")
  
   let highlight: any;
   if (healthy) {
     if (name === "ALL") {
-      return <AllBuildsGreenHighlight picture={picture} />
+      return <AllBuildsGreenHighlight picture={picture} minutes={timeBeingGreenInMin as number} />
     }
     return <RepairedBuildHighlight name={name} picture={picture} />
   }
