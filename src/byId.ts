@@ -22,22 +22,12 @@ export interface BuildsByIdState {
     [id: string]: Build
 }
 
-// TODO include corejs instead to get Object.assign
-const copy = <T>  (src : T) : T => {
-  const result: any = {}  
-   for (let key in src) {
-     result[key] = (src as any)[key];
-   }
-  return result as T;
-}
-
-
 export default (state: BuildsByIdState = {}, action?: Action<BuildNotification>): BuildsByIdState => {
   if (action && action.type === types.BUILD_NOTIFICATION) {
 
     const notification = action.payload;
 
-    const build: Build = Object.assign(
+    const build: Build = Object.assign( {},
       state[notification.buildId] || 
       {
           buildId : notification.buildId,
@@ -55,8 +45,7 @@ export default (state: BuildsByIdState = {}, action?: Action<BuildNotification>)
             text: ""
           },
           lastKnownFailure: null
-      }
-    );
+      });
 
     if (notification.success === build.lastKnownBuildStatus.success) {
         build.buildsSinceLastStatusChange++;
@@ -77,7 +66,7 @@ export default (state: BuildsByIdState = {}, action?: Action<BuildNotification>)
       build.lastKnownFailure = build.lastKnownBuildStatus;
     }
     
-    const newState = copy(state);
+    const newState = Object.assign({}, state);
     newState[notification.buildId] = build;
     return newState;
   }

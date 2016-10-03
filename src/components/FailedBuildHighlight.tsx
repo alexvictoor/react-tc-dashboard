@@ -26,7 +26,7 @@ export default (
     
     const header = `${name} (${id})`
     const bigMsg = (numberAttemptsToFix > 1) 
-      ? `${name} is still broken (${numberAttemptsToFix} uncesseful attempts to repair it)` 
+      ? `${name} is still broken (${numberAttemptsToFix} unsuccesseful attempts to repair it)` 
       : name;
     const durationSection = (brokenTimeInMin > 1) 
       ? <h3>Broken <Duration minutes={brokenTimeInMin} bsStyle="danger" /></h3>
