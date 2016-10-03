@@ -57,6 +57,18 @@
 	    store.dispatch(actions_1.createClockTick(new Date()));
 	}, conf.tickInterval * 1000);
 	var fetchBuids = function () {
+	    if (conf.teamcityUrl.startsWith("DEMO")) {
+	        conf.builds.forEach(function (id) {
+	            store.dispatch(actions_1.createNotification({
+	                success: (Math.random() < 0.7),
+	                buildId: id,
+	                buildName: "DEMO " + id,
+	                buildDate: new Date(),
+	                statusText: "Fake build result"
+	            }));
+	        });
+	        return;
+	    }
 	    conf.builds.forEach(function (id) {
 	        $.ajax({
 	            url: conf.teamcityUrl + "/httpAuth/app/rest/builds/buildType:" + id,
@@ -30784,20 +30796,12 @@
 	var actions_1 = __webpack_require__(284);
 	var moment = __webpack_require__(285);
 	__webpack_require__(287);
-	// TODO include corejs instead to get Object.assign
-	var copy = function (src) {
-	    var result = {};
-	    for (var key in src) {
-	        result[key] = src[key];
-	    }
-	    return result;
-	};
 	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = function (state, action) {
 	    if (state === void 0) { state = {}; }
 	    if (action && action.type === actions_1.types.BUILD_NOTIFICATION) {
 	        var notification = action.payload;
-	        var build = Object.assign(state[notification.buildId] ||
+	        var build = Object.assign({}, state[notification.buildId] ||
 	            {
 	                buildId: notification.buildId,
 	                buildName: notification.buildName,
@@ -30833,7 +30837,7 @@
 	        else {
 	            build.lastKnownFailure = build.lastKnownBuildStatus;
 	        }
-	        var newState = copy(state);
+	        var newState = Object.assign({}, state);
 	        newState[notification.buildId] = build;
 	        return newState;
 	    }
@@ -42979,7 +42983,7 @@
 	    var id = _a.id, name = _a.name, numberAttemptsToFix = _a.numberAttemptsToFix, brokenTimeInMin = _a.brokenTimeInMin, picture = _a.picture, messageOfFirstBrokenBuild = _a.messageOfFirstBrokenBuild;
 	    var header = name + " (" + id + ")";
 	    var bigMsg = (numberAttemptsToFix > 1)
-	        ? name + " is still broken (" + numberAttemptsToFix + " uncesseful attempts to repair it)"
+	        ? name + " is still broken (" + numberAttemptsToFix + " unsuccesseful attempts to repair it)"
 	        : name;
 	    var durationSection = (brokenTimeInMin > 1)
 	        ? React.createElement("h3", null, 
