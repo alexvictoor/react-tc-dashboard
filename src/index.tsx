@@ -27,6 +27,21 @@ setInterval(() => {
 }, conf.tickInterval * 1000);
 
 const fetchBuids = () => {
+
+  if (conf.teamcityUrl.startsWith("DEMO")) {
+    conf.builds.forEach(id => {
+      store.dispatch(
+        createNotification({
+          success: (Math.random() < 0.7),
+          buildId: id,
+          buildName: "DEMO " + id,
+          buildDate: new Date(),
+          statusText: "Fake build result"
+        })
+      );
+    });
+    return;
+  }
   
   conf.builds.forEach(id => {
     $.ajax({

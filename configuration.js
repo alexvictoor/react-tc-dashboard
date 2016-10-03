@@ -1,17 +1,19 @@
 
 
 var conf =  {
-    teamcityUrl: "http://127.0.0.1:9444",
+    teamcityUrl: "DEMO",  // need to be changed to your TeamCity URL such as  "http://127.0.0.1:9444",
     pollingInterval: 10,
     tickInterval: 20,
     highlightSize: 6,
     buildListSize: 6,
     builds: [ 
-        "Dummy_DuDu",
-        "Level1_Level2",
-        "Dummy_Bibi"
+        "To be changed by real builds",
+        "To build or not to build?",
+        "One Fake Build",
+        "Demo build",
+        "Color Blind Build"
     ],
-    
+
     successPictures: [
         "img/success/The_fonz_thumbs_up.jpg",
         "img/success/ww.gif",

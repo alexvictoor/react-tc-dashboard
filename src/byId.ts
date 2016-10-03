@@ -27,7 +27,7 @@ export default (state: BuildsByIdState = {}, action?: Action<BuildNotification>)
 
     const notification = action.payload;
 
-    const build: Build = Object.assign(
+    const build: Build = Object.assign( {},
       state[notification.buildId] || 
       {
           buildId : notification.buildId,
@@ -45,8 +45,7 @@ export default (state: BuildsByIdState = {}, action?: Action<BuildNotification>)
             text: ""
           },
           lastKnownFailure: null
-      }
-    );
+      });
 
     if (notification.success === build.lastKnownBuildStatus.success) {
         build.buildsSinceLastStatusChange++;
@@ -67,7 +66,7 @@ export default (state: BuildsByIdState = {}, action?: Action<BuildNotification>)
       build.lastKnownFailure = build.lastKnownBuildStatus;
     }
     
-    const newState = Object.assign(state);
+    const newState = Object.assign({}, state);
     newState[notification.buildId] = build;
     return newState;
   }
