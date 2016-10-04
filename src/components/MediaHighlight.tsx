@@ -1,4 +1,5 @@
 import * as React from "react";
+import Video from "./Video"
 
 interface MediaProps {
     picture: string;
@@ -7,14 +8,12 @@ interface MediaProps {
 export default ({ picture }: MediaProps) => {
     if (picture.endsWith("mp4")) {
         return (
-            <video autoPlay loop style={{maxHeight: "100%", maxWidth: "100%" }} >
-              <source src={picture} />
-            </video>
+            <Video source={picture} />
         )
     }
 
     return (
-        <img 
+        <img
             src={picture} 
             style={{maxHeight: "100%", maxWidth: "100%" }} 
         />
