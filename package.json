@@ -4,7 +4,7 @@
   "description": "",
   "main": "./dist/bundle.js",
   "scripts": {
-    "postinstall": "npm install -g typescript typings && typings install --overwrite --save && npm link typescript",
+    "postinstall": "npm install -g typescript && npm link typescript",
     "test": "karma start"
   },
   "author": "",
@@ -22,6 +22,16 @@
     "redux-form": "^5.3.2"
   },
   "devDependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/core-js": "^0.9.34",
+    "@types/enzyme": "^2.4.36",
+    "@types/jquery": "^2.0.33",
+    "@types/mocha": "^2.2.32",
+    "@types/react": "^0.14.39",
+    "@types/react-bootstrap": "0.0.33",
+    "@types/react-dom": "^0.14.17",
+    "@types/react-redux": "^4.4.32",
+    "@types/react-router": "^2.0.37",
     "chai": "^3.5.0",
     "enzyme": "^2.4.1",
     "json-loader": "^0.5.4",

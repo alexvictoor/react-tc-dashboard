@@ -11,7 +11,7 @@ require('core-js/es5');
 module.exports = function (config) {
   config.set({
     basePath: '',
-    frameworks: ['mocha', 'chai', 'sinon'],
+    frameworks: ['mocha', 'chai'],
     files: [
       'src/**/*.spec.ts',
       'src/**/*.spec.tsx',
