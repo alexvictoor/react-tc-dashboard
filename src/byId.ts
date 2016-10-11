@@ -86,7 +86,7 @@ export interface BuildShortDescription {
 const getBuildsByStatus = (state: BuildsByIdState, success: boolean, now = new Date()): BuildShortDescription[] => {
   const result: BuildShortDescription[] = [];
   for (var key in state) {
-    const build = state[key];
+    const build = state[key]; 
     if (build.lastKnownBuildStatus.success === success) {
       const minutesSinceBuild
         = moment(now)

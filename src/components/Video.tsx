@@ -23,7 +23,7 @@ export default class Video extends React.Component<VideoProps, any> {
   render() {
     const { source } = this.props; 
     return (
-      <video key="build_highlight_video" autoPlay loop style={{maxHeight: "100%", maxWidth: "100%" }} 
+      <video autoPlay loop style={{maxHeight: "100%", maxWidth: "100%" }} 
         ref={(ref) => this.videoElt = ref}
       >
         <source src={source} />
