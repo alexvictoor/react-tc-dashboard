@@ -42,7 +42,8 @@ export const isNewBuild = (notification: BuildNotification, state: AppState): bo
   if (!buildState) {
     return true;
   }
-  return !moment(notification.buildDate).isSame(buildState.lastKnownBuildStatus.buildDate);
+  const lastBuild = buildState.lastKnownBuildStatus;
+  return (lastBuild.success !== notification.success) || !moment(notification.buildDate).isSame(lastBuild.buildDate);
 }
 
 export const createClockTick = (tick: Date): Action<Date> => (

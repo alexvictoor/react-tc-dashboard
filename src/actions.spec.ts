@@ -107,6 +107,19 @@ describe('Action creator', () => {
     expect(newBuild).to.be.false;
   });
 
+  it('should take notification into account when status different', () => {
+    // given
+    const store = createStore({});
+    const notification = createNotification(parseBuildNotification(raw));
+    store.dispatch(notification);
+    // when
+    const buildNotification = parseBuildNotification(raw);
+    buildNotification.success = !buildNotification.success;
+    const newBuild = isNewBuild(buildNotification, store.getState());
+    // then
+    expect(newBuild).to.be.true;
+  });
+
 
 });
        
