@@ -6,6 +6,7 @@
   "scripts": {
     "postinstall": "npm install -g typescript && npm link typescript",
     "test": "mocha --opts mocha.opts --watch",
+    "test:cover": "nyc mocha --opts mocha.opts",
     "test:karma": "karma start"
   },
   "author": "",
@@ -42,6 +43,7 @@
     "karma-typescript-preprocessor2": "^1.2.1",
     "karma-webpack": "^1.8.0",
     "mocha": "^3.0.2",
+    "nyc": "^8.4.0",
     "phantomjs-prebuilt": "^2.1.12",
     "react-addons-test-utils": "^15.3.0",
     "sinon": "^1.17.5",
@@ -49,5 +51,30 @@
     "ts-loader": "^0.8.2",
     "ts-node": "^1.4.1",
     "webpack": "^1.13.1"
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.ts",
+      "src/**/*.tsx"
+    ],
+    "exclude": [
+      "node_modules/",
+      "dist/",
+      "src/**/*.spec.ts",
+      "src/**/*.spec.tsx"
+    ],
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text-summary",
+      "json",
+      "html"
+    ],
+    "all": true
   }
 }
