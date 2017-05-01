@@ -5,7 +5,7 @@ import * as actions from "./actions";
 
 import * as moment from 'moment';
 
-
+import "core-js";
 
 describe('Selector get build highlight', () => {
 

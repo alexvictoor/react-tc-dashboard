@@ -6,6 +6,8 @@ webpackConfig.module.loaders.push({
   loader: 'json-loader'
 });
 
+require('core-js/es6');
+
 module.exports = function (config) {
   config.set({
     basePath: '',
