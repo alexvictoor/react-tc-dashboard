@@ -5,6 +5,12 @@ import { AppState, BuildDetails, getBuildHighlight } from "../reducers";
 import { RepairedBuildHighlight, FailedBuildHighlight, AllBuildsGreenHighlight } from "../components"
 
 
+declare function require(name: string): any
+const { 
+  Shake 
+} = require("reshake");
+
+
 type BuildHightlightContainerProps = BuildDetails; 
 
 
@@ -35,14 +41,16 @@ export const BuildHighlightContainer = (
   }
   
   return (
-    <FailedBuildHighlight 
-      id={id as string}
-      name={name}
-      brokenTimeInMin={brokenTimeInMin as number}
-      numberAttemptsToFix={numberAttemptsToFix as number}
-      picture={picture}
-      messageOfFirstBrokenBuild={messageOfFirstBrokenBuild as string}
-    />
+    <Shake fixed={true} >
+      <FailedBuildHighlight 
+        id={id as string}
+        name={name}
+        brokenTimeInMin={brokenTimeInMin as number}
+        numberAttemptsToFix={numberAttemptsToFix as number}
+        picture={picture}
+        messageOfFirstBrokenBuild={messageOfFirstBrokenBuild as string}
+      />
+    </Shake>
   );
 }  
 
