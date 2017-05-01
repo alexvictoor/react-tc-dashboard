@@ -2,9 +2,6 @@ import { expect } from 'chai';
 import buildsToDisplay, { BuildsToDisplayState } from "./buildsToDisplay"
 import { Action, BuildNotification, types, createClockTick  } from "./actions"
 
-import "core-js"
-
-
 let buildNumber = 0;
 
 const createBuildNotification = (success = true) => (

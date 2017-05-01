@@ -3,8 +3,6 @@ import { Store } from "redux"
 import * as reducers from "./reducers";
 import * as actions from "./actions";
 
-import "core-js";
-
 import * as moment from 'moment';
 
 
@@ -117,7 +115,7 @@ describe('Selector get build highlight', () => {
     expect(highlight.timeBeingGreenInMin).to.not.be.undefined;
   });
 
-  it('should returnthe number of minutes since all builds green', () => {
+  it('should return the number of minutes since all builds green', () => {
     // given
     store.dispatch(actions.createNotification({
       buildId: "123",

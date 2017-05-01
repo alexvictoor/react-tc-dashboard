@@ -2,8 +2,6 @@ import { expect } from 'chai';
 import byId, { BuildsByIdState, getSuccessfulBuilds, getFailedBuilds } from "./byId"
 import { Action, BuildNotification, types, createClockTick  } from "./actions"
 
-import "core-js"
-
 let buildNumber = 0;
 
 const createBuildNotification = (success = true) => (

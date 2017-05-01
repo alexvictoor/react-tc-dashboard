@@ -1,8 +1,7 @@
 import { Action, BuildNotification, types } from "./actions";
 import * as moment from 'moment';
-import "core-js";
 
-interface Build {
+export interface Build {
   buildId: string;
   buildName: string;  
   buildsSinceLastStatusChange: number;
@@ -12,7 +11,7 @@ interface Build {
   lastKnownFailure: BuildStatus
 }
 
-interface BuildStatus {
+export interface BuildStatus {
   success: boolean;
   buildDate: Date;  
   text: string;
@@ -109,7 +108,7 @@ export const getFailedBuilds = (state: BuildsByIdState, now = new Date()): Build
 }
 
 export const getLatestBuildDate = (state: BuildsByIdState): Date => {
-  return Object.values(state).reduce((lastBuildDate: Date, build: Build) => {
+  return Object.keys(state).map(key => state[key]).reduce((lastBuildDate: Date, build: Build) => {
     if (build.lastKnownBuildStatus.buildDate > lastBuildDate) {
       return build.lastKnownBuildStatus.buildDate;
     }
