@@ -1,12 +1,17 @@
 {
     "compilerOptions": {
         "outDir": "./dist/",
+        "declaration": true,
         "sourceMap": true,
         "noImplicitAny": true,
         "strictNullChecks": true,
         "module": "commonjs",
         "target": "es5",
         "jsx": "react",
+        "typeRoots" : ["./node_modules/@types"],
+        "lib": [
+            "es2015", "es2017", "dom"
+        ],
         "types": [
             "mocha", "chai"
         ]
